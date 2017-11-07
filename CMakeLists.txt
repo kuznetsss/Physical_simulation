@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 file(GLOB_RECURSE CPP ${PROJECT_SOURCE_DIR}/source/*cpp)
 file(GLOB_RECURSE H ${PROJECT_SOURCE_DIR}/source/*h)
+include_directories(${PROJECT_SOURCE_DIR}/source)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
