@@ -9,6 +9,13 @@ public:
     Vector2i();
     Vector2i(int x, int y);
 
+    Vector2i operator+(const Vector2i& right) const;
+    void operator+=(const Vector2i& right);
+    Vector2i operator-(const Vector2i& right) const;
+    void operator-=(const Vector2i& right);
+    Vector2i operator*(const int right) const;
+    Vector2i operator/(const int right) const;
+
     int x() const;
     int& x();
     int y() const;

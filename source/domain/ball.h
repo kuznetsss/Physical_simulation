@@ -24,6 +24,11 @@ public:
     void setFixed(bool fixed);
     bool isFixed() const;
 
+    constexpr int radius();
+
+    void applyForce(const utils::Vector2i& force);
+    void makeStep();
+
 private:
     struct Impl;
     std::experimental::propagate_const<std::unique_ptr<Impl>> _d;

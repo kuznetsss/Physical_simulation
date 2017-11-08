@@ -15,6 +15,7 @@ struct Ball::Impl
     utils::Vector2i position;
     utils::Vector2i velocity;
     static constexpr int radius = 5;
+    static constexpr int mass = 1;
 };
 
 Ball::Ball():
@@ -57,5 +58,22 @@ bool Ball::isFixed() const
 {
     return _d->isFixed;
 }
+
+constexpr int Ball::radius()
+{
+    return _d->radius;
+}
+
+void Ball::applyForce(const utils::Vector2i& force)
+{
+    _d->velocity += force / _d->mass;
+}
+
+void Ball::makeStep()
+{
+    _d->position += _d->velocity;
+}
+
+
 
 } // namespace domain

@@ -11,6 +11,38 @@ Vector2i::Vector2i(int x, int y):
     _y(y)
 {}
 
+Vector2i Vector2i::operator+(const Vector2i& right) const
+{
+    return Vector2i(_x + right.x(), _y + right.y());
+}
+
+void Vector2i::operator+=(const Vector2i& right)
+{
+    _x += right.x();
+    _y += right.y();
+}
+
+Vector2i Vector2i::operator-(const Vector2i& right) const
+{
+    return Vector2i(_x + right.x(), _y + right.y());
+}
+
+void Vector2i::operator-=(const Vector2i& right)
+{
+    _x -= right.x();
+    _y -= right.y();
+}
+
+Vector2i Vector2i::operator*(const int right) const
+{
+   return Vector2i(_x * right, _y * right);
+}
+
+Vector2i Vector2i::operator/(const int right) const
+{
+    return Vector2i(_x / right, _y / right);
+}
+
 int Vector2i::x() const
 {
     return _x;
