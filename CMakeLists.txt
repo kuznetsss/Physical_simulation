@@ -4,16 +4,27 @@ project(Balls_simulator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-file(GLOB_RECURSE CPP ${PROJECT_SOURCE_DIR}/source/*cpp)
-file(GLOB_RECURSE H ${PROJECT_SOURCE_DIR}/source/*h)
+file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/source/*.cpp)
+file(GLOB_RECURSE HEADERS ${PROJECT_SOURCE_DIR}/source/*.h)
 include_directories(${PROJECT_SOURCE_DIR}/source)
 
-# Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
-# Find the QtWidgets library
 find_package(Qt5Widgets)
 
-add_executable(balls_simulator ${CPP} ${H})
-# Use the Widgets module from Qt 5.
-target_link_libraries(balls_simulator Qt5::Widgets)
+set(EXECUTABLE balls_simulator)
+add_executable(${EXECUTABLE} ${SOURCES} ${HEADERS})
+target_link_libraries(${EXECUTABLE} Qt5::Widgets)
+
+# Tests
+file(GLOB_RECURSE TESTS_SOURCES ${PROJECT_SOURCE_DIR}/test/*.cpp
+	${PROJECT_SOURCE_DIR}/source/domain/*.cpp
+	${PROJECT_SOURCE_DIR}/source/utils/*.cpp)
+file(GLOB_RECURSE TESTS_HEADERS ${PROJECT_SOURCE_DIR}/source/domain/*.h
+	${PROJECT_SOURCE_DIR}/source/utils/*.h)
+
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+add_executable(${EXECUTABLE}_tests ${TESTS_SOURCES} ${TESTS_HEADERS})
+target_link_libraries(${EXECUTABLE}_tests ${GTEST_LIBRARIES})

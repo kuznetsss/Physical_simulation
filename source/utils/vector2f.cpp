@@ -24,7 +24,7 @@ void Vector2f::operator+=(const Vector2f& right)
 
 Vector2f Vector2f::operator-(const Vector2f& right) const
 {
-    return Vector2f(_x + right.x(), _y + right.y());
+    return Vector2f(_x - right.x(), _y - right.y());
 }
 
 void Vector2f::operator-=(const Vector2f& right)
