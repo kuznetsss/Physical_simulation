@@ -5,10 +5,11 @@
 #include <experimental/propagate_const>
 
 #include "utils/vector2f.h"
+#include "utils/non_copyable.h"
 
 namespace domain {
 
-class Ball
+class Ball: public utils::NonCopyable
 {
 public:
     Ball();
