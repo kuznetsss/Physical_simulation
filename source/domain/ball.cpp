@@ -69,14 +69,14 @@ constexpr float Ball::mass()
    return Impl::mass;
 }
 
-void Ball::applyForce(const utils::Vector2f& force)
+void Ball::applyForce(const utils::Vector2f& force, const float deltaT)
 {
-    _d->velocity += force / mass();
+    _d->velocity += force * deltaT / mass();
 }
 
-void Ball::makeStep()
+void Ball::makeStep(const float deltaT)
 {
-    _d->position += _d->velocity;
+    if (!_d->isFixed) _d->position += _d->velocity * deltaT;
 }
 
 

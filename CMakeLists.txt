@@ -21,7 +21,10 @@ file(GLOB_RECURSE TESTS_SOURCES ${PROJECT_SOURCE_DIR}/test/*.cpp
 	${PROJECT_SOURCE_DIR}/source/domain/*.cpp
 	${PROJECT_SOURCE_DIR}/source/utils/*.cpp)
 file(GLOB_RECURSE TESTS_HEADERS ${PROJECT_SOURCE_DIR}/source/domain/*.h
-	${PROJECT_SOURCE_DIR}/source/utils/*.h)
+	${PROJECT_SOURCE_DIR}/source/utils/*.h
+	${PROJECT_SOURCE_DIR}/test/*.h)
+
+include_directories(${PROJECT_SOURCE_DIR}/test)
 
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})

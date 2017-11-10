@@ -1,11 +1,9 @@
 #include "utils/vector2f.h"
 
 #include <gtest/gtest.h>
-#include <iostream>
+#include "test_extesions.h"
 
-#define EXPECT_VECTORS_EQ(vec1, vec2)		    \
-    EXPECT_FLOAT_EQ((vec1).x(), (vec2).x()); 	\
-    EXPECT_FLOAT_EQ((vec1).y(), (vec2).y());
+
 
 using namespace utils;
 

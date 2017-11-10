@@ -28,8 +28,8 @@ public:
     constexpr float radius();
     constexpr float mass();
 
-    void applyForce(const utils::Vector2f& force);
-    void makeStep();
+    void applyForce(const utils::Vector2f& force, float deltaT);
+    void makeStep(float deltaT);
 
 private:
     struct Impl;
