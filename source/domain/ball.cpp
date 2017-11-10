@@ -14,8 +14,8 @@ struct Ball::Impl
     bool isFixed;
     utils::Vector2f position;
     utils::Vector2f velocity;
-    static constexpr int radius = 5;
-    static constexpr int mass = 1;
+    static constexpr float radius = 5.f;
+    static constexpr float mass = 1.f;
 };
 
 Ball::Ball():
@@ -59,14 +59,19 @@ bool Ball::isFixed() const
     return _d->isFixed;
 }
 
-constexpr int Ball::radius()
+constexpr float Ball::radius()
 {
-    return _d->radius;
+    return Impl::radius;
+}
+
+constexpr float Ball::mass()
+{
+   return Impl::mass;
 }
 
 void Ball::applyForce(const utils::Vector2f& force)
 {
-    _d->velocity += force / _d->mass;
+    _d->velocity += force / mass();
 }
 
 void Ball::makeStep()

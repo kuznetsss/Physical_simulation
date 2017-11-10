@@ -24,7 +24,8 @@ public:
     void setFixed(bool fixed);
     bool isFixed() const;
 
-    constexpr int radius();
+    constexpr float radius();
+    constexpr float mass();
 
     void applyForce(const utils::Vector2f& force);
     void makeStep();
