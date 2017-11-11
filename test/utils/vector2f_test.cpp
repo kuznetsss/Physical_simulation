@@ -18,6 +18,7 @@ TEST_F(Vector2f_test, Norm)
 {
     EXPECT_FLOAT_EQ(vec1.normSquare(), 25.f);
     EXPECT_FLOAT_EQ(vec1.norm(), 5.f);
+    EXPECT_FLOAT_EQ(vec1.normalized().norm(), 1.f);
 }
 
 TEST_F(Vector2f_test, Arithmetic)
@@ -26,6 +27,9 @@ TEST_F(Vector2f_test, Arithmetic)
     EXPECT_VECTORS_EQ(vec1 - vec2, Vector2f(-4.f, -4.f));
     EXPECT_VECTORS_EQ(vec1 * 0.5f, Vector2f(1.5f, 2.f));
     EXPECT_VECTORS_EQ(vec1 / 4.f, Vector2f(0.75f, 1.f));
+
+    EXPECT_TRUE(vec1 == Vector2f(3.f, 4.f));
+    EXPECT_FALSE(vec1 == vec2);
 
     Vector2f testVec = vec1;
     testVec += vec2;

@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include "test_extesions.h"
 
+#include "utils/vector2f.h"
 #include "utils/constants.h"
 
 using namespace domain;
@@ -21,7 +22,7 @@ protected:
     }
 };
 
-TEST_F(Ball_Test, RandomPosition)
+TEST_F(Ball_Test, RandomPositionAndId)
 {
     const Ball ball1;
     EXPECT_LE(ball1.position().x(), FIELD_LEFT_WALL);
@@ -31,6 +32,8 @@ TEST_F(Ball_Test, RandomPosition)
 
     const Ball ball2;
     EXPECT_VECTORS_NE(ball1.position(), ball2.position());
+
+    EXPECT_NE(ball1.id(), ball2.id());
 }
 
 TEST_F(Ball_Test, ApplyForce)

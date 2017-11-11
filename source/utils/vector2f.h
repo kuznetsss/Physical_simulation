@@ -9,14 +9,17 @@ public:
     Vector2f();
     Vector2f(float x, float y);
 
-    Vector2f operator+(const Vector2f& right) const;
-    void operator+=(const Vector2f& right);
+    friend Vector2f operator+(const Vector2f& left, const Vector2f& right);
+    friend void operator+=(Vector2f& left, const Vector2f& right);
 
-    Vector2f operator-(const Vector2f& right) const;
-    void operator-=(const Vector2f& right);
+    friend Vector2f operator-(const Vector2f& left, const Vector2f& right);
+    friend void operator-=(Vector2f& left, const Vector2f& right);
 
-    Vector2f operator*(const float right) const;
-    Vector2f operator/(const float right) const;
+    friend Vector2f operator*(const Vector2f& left, const float right);
+    friend Vector2f operator/(const Vector2f& left, const float right);
+
+    friend bool operator==(const Vector2f& left, const Vector2f& right);
+    friend bool operator!=(const Vector2f& left, const Vector2f& right);
 
     float x() const;
     float& x();
@@ -24,6 +27,7 @@ public:
     float& y();
     float norm() const;
     float normSquare() const;
+    Vector2f normalized() const;
 
 private:
     float _x = 0;

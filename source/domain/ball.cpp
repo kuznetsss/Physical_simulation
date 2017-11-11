@@ -1,21 +1,24 @@
 #include "domain/ball.h"
 
 #include "utils/constants.h"
+#include "utils/vector2f.h"
 
 namespace domain {
 struct Ball::Impl
 {
     Impl(const utils::Vector2f& initPosition):
-        isFixed(false),
-        position(initPosition),
-        velocity(utils::Vector2f())
+        _position(initPosition),
+        _velocity(utils::Vector2f()),
+        _id(std::hash<bool*>()(&_isFixed)),
+        _isFixed(false)
     {}
 
-    bool isFixed;
-    utils::Vector2f position;
-    utils::Vector2f velocity;
-    static constexpr float radius = 5.f;
-    static constexpr float mass = 1.f;
+    utils::Vector2f _position;
+    utils::Vector2f _velocity;
+    const BallId _id;
+    bool _isFixed;
+    static constexpr float _radius = 5.f;
+    static constexpr float _mass = 1.f;
 };
 
 Ball::Ball():
@@ -31,52 +34,57 @@ Ball::~Ball() = default;
 
 void Ball::setPosition(const utils::Vector2f& newPosition)
 {
-    _d->position = newPosition;
+    _d->_position = newPosition;
 }
 
 const utils::Vector2f& Ball::position() const
 {
-   return _d->position;
+   return _d->_position;
 }
 
 void Ball::setVelocity(const utils::Vector2f& newVelocity)
 {
-    _d->velocity = newVelocity;
+    _d->_velocity = newVelocity;
 }
 
 const utils::Vector2f& Ball::velocity() const
 {
-   return _d->velocity;
+   return _d->_velocity;
 }
 
 void Ball::setFixed(const bool fixed)
 {
-    _d->isFixed = fixed;
+    _d->_isFixed = fixed;
 }
 
 bool Ball::isFixed() const
 {
-    return _d->isFixed;
+    return _d->_isFixed;
 }
 
 constexpr float Ball::radius()
 {
-    return Impl::radius;
+    return Impl::_radius;
 }
 
 constexpr float Ball::mass()
 {
-   return Impl::mass;
+    return Impl::_mass;
 }
 
 void Ball::applyForce(const utils::Vector2f& force, const float deltaT)
 {
-    _d->velocity += force * deltaT / mass();
+    _d->_velocity += force * deltaT / mass();
 }
 
 void Ball::makeStep(const float deltaT)
 {
-    if (!_d->isFixed) _d->position += _d->velocity * deltaT;
+    if (!_d->_isFixed) _d->_position += _d->_velocity * deltaT;
+}
+
+BallId Ball::id() const
+{
+    return _d->_id;
 }
 
 
