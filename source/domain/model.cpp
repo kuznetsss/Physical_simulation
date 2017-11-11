@@ -5,6 +5,7 @@
 #include <mutex>
 
 #include "domain/ball.h"
+#include "domain/physics.h"
 
 namespace domain {
 
@@ -13,11 +14,10 @@ struct Model::Impl
     Impl();
     ~Impl();
 
-    utils::Vector2f calculateForceForBall(const BallPtr& ball);
     void simulate();
 
     std::unordered_map<std::size_t, BallPtr> _idToBallMap;
-    std::mutex _mutex;
+    mutable std::mutex _mutex;
     bool _simulationIsActive = false;
     std::unique_ptr<std::thread> _thread;
     static constexpr float _deltaT = 1.f;
@@ -45,7 +45,7 @@ void Model::removeBall(const BallId& ballId)
 void Model::removeBall(const utils::Vector2f &position)
 {
     const auto ballId = findBallByPosition(position);
-    if (ballId.toStdSizeT() != BallId::NULLID) removeBall(ballId);
+    if (!ballId.isNull()) removeBall(ballId);
 }
 
 void Model::moveBall(const BallId& ballId, const utils::Vector2f& position)
@@ -54,8 +54,20 @@ void Model::moveBall(const BallId& ballId, const utils::Vector2f& position)
     _d->_idToBallMap.at(ballId.toStdSizeT())->setPosition(position);
 }
 
+void Model::setBallFixed(const BallId& ballId, const bool fixed)
+{
+    std::lock_guard<std::mutex> lock(_d->_mutex);
+    _d->_idToBallMap.at(ballId.toStdSizeT())->setFixed(fixed);
+}
+
+void Model::setBallFixed(const utils::Vector2f& position, const bool fixed)
+{
+    setBallFixed(findBallByPosition(position), fixed);
+}
+
 BallId Model::findBallByPosition(const utils::Vector2f& position) const
 {
+    std::lock_guard<std::mutex> lock(_d->_mutex);
     for (const auto& idAndBall : _d->_idToBallMap) {
         if (idAndBall.second->position() == position)
             return idAndBall.first;
@@ -69,9 +81,32 @@ void Model::startSimulation()
     _d->_thread = std::make_unique<std::thread>(&Impl::simulate, std::ref(*_d.get()));
 }
 
+std::size_t Model::ballsNumber() const
+{
+    std::lock_guard<std::mutex> lock(_d->_mutex);
+    return _d->_idToBallMap.size();
+}
+
+std::vector<BallId> Model::ballIds() const
+{
+    std::lock_guard<std::mutex> lock(_d->_mutex);
+    std::vector<BallId> result;
+    for (const auto& idAndBall : _d->_idToBallMap) {
+        result.push_back(idAndBall.first);
+    }
+    return result;
+}
+
+utils::Vector2f Model::ballPosition(const BallId& ballId) const
+{
+    std::lock_guard<std::mutex> lock(_d->_mutex);
+    return _d->_idToBallMap.at(ballId.toStdSizeT())->position();
+}
+
 Model::Impl::Impl()
 {
-   const std::size_t ballsInitialNumber = std::rand() % 10;
+    // TODO вынести в константу максимальное число шаров при старте
+   const std::size_t ballsInitialNumber = std::rand() % 10 + 1;
    for (std::size_t i = 0; i < ballsInitialNumber; i++) {
        // TODO дублирование с addBall
        const auto newBall = std::make_shared<Ball>();
@@ -89,29 +124,18 @@ Model::Impl::~Impl()
     }
 }
 
-utils::Vector2f Model::Impl::calculateForceForBall(const BallPtr& ball)
-{
-    const auto ballPosition = ball->position();
-    const auto ballId = ball->id().toStdSizeT();
-
-    utils::Vector2f totalForce;
-    for (auto& idAndBall : _idToBallMap) {
-        if (idAndBall.first == ballId) continue;
-        const auto deltaR = ballPosition - idAndBall.second->position();
-        totalForce += deltaR.normalized() * (deltaR.norm() - 1.f) / deltaR.normSquare();
-    }
-    return totalForce;
-}
-
 void Model::Impl::simulate()
 {
-    for (auto& idAndBall : _idToBallMap) {
-        const auto force = calculateForceForBall(idAndBall.second);
-        idAndBall.second->applyForce(force, Impl::_deltaT);
-    }
+    while (_simulationIsActive) {
+        std::lock_guard<std::mutex> lock(_mutex);
+        for (auto& idAndBall : _idToBallMap) {
+            const auto force = Physics::calculateForceForBall(idAndBall.second, _idToBallMap);
+            idAndBall.second->applyForce(force, Impl::_deltaT);
+        }
 
-    for (auto& idAndBall : _idToBallMap) {
-        idAndBall.second->makeStep(Impl::_deltaT);
+        for (auto& idAndBall : _idToBallMap) {
+            idAndBall.second->makeStep(Impl::_deltaT);
+        }
     }
 }
 

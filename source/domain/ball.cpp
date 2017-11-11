@@ -79,6 +79,7 @@ void Ball::applyForce(const utils::Vector2f& force, const float deltaT)
 
 void Ball::makeStep(const float deltaT)
 {
+    // TODO добавить отскок на границе
     if (!_d->_isFixed) _d->_position += _d->_velocity * deltaT;
 }
 
