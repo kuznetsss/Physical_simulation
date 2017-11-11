@@ -14,7 +14,7 @@ find_package(Qt5Widgets)
 
 set(EXECUTABLE balls_simulator)
 add_executable(${EXECUTABLE} ${SOURCES} ${HEADERS})
-target_link_libraries(${EXECUTABLE} Qt5::Widgets)
+target_link_libraries(${EXECUTABLE} Qt5::Widgets pthread)
 
 # Tests
 file(GLOB_RECURSE TESTS_SOURCES ${PROJECT_SOURCE_DIR}/test/*.cpp
@@ -30,4 +30,4 @@ find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(${EXECUTABLE}_tests ${TESTS_SOURCES} ${TESTS_HEADERS})
-target_link_libraries(${EXECUTABLE}_tests ${GTEST_LIBRARIES})
+target_link_libraries(${EXECUTABLE}_tests ${GTEST_LIBRARIES} pthread)
