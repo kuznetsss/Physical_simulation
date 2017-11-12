@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <thread>
 #include <mutex>
+#include <iostream>
 
 #include "domain/ball.h"
 #include "domain/physics.h"
@@ -20,7 +21,7 @@ struct Model::Impl
     mutable std::mutex _mutex;
     bool _simulationIsActive = false;
     std::unique_ptr<std::thread> _thread;
-    static constexpr float _deltaT = 0.001f;
+    static constexpr float _deltaT = 0.0005f;
 };
 
 Model::Model():
@@ -29,11 +30,12 @@ Model::Model():
 
 Model::~Model() = default;
 
-void Model::addBall(const utils::Vector2f &position)
+common::BallId Model::addBall(const utils::Vector2f &position)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     const auto newBall = std::make_shared<Ball>(position);
     _d->_idToBallMap.emplace(newBall->id().toStdSizeT(), newBall);
+    return newBall->id();
 }
 
 void Model::removeBall(const common::BallId& ballId)
@@ -69,7 +71,8 @@ common::BallId Model::findBallByPosition(const utils::Vector2f& position) const
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     for (const auto& idAndBall : _d->_idToBallMap) {
-        if (idAndBall.second->position() == position)
+        if ((idAndBall.second->position() - position).normSquare() <
+                common::BallInfo::RADIUS * common::BallInfo::RADIUS)
             return idAndBall.first;
     }
     return common::BallId::NULLID;
@@ -116,11 +119,12 @@ utils::Vector2f Model::ballPosition(const common::BallId& ballId) const
 Model::Impl::Impl()
 {
     // TODO вынести в константу максимальное число шаров при старте
-   const std::size_t ballsInitialNumber = 10;
+   const std::size_t ballsInitialNumber = 1;
    for (std::size_t i = 0; i < ballsInitialNumber; i++) {
        // TODO дублирование с addBall
        const auto newBall = std::make_shared<Ball>();
        _idToBallMap.emplace(newBall->id().toStdSizeT(), newBall);
+       std::cout << newBall->position().x() << "\t" << newBall->position().y() << std::endl;
    }
 }
 

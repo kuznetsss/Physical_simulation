@@ -1,6 +1,8 @@
 #include "presenter/main_presenter.h"
 
 #include <QApplication>
+#include <QMouseEvent>
+#include <QDebug>
 
 #include "domain/model.h"
 #include "view/main_widow.h"
@@ -21,6 +23,9 @@ struct MainPresenter::Impl: public IPresenter
     domain::Model _model;
     // Вектор всегда содержит актуальное количество шаров, но не актуальные позиции
     std::vector<view::Ball> _balls;
+    utils::Vector2f _buttonPressedPosition = utils::Vector2f();
+    common::BallId _fixedBall = common::BallId::NULLID;
+    const float _deletingEpsilon = 10.f;
 };
 
 MainPresenter::MainPresenter():
@@ -48,17 +53,48 @@ MainPresenter::Impl::Impl():
 
 void MainPresenter::Impl::mousePressed(QMouseEvent* event)
 {
-
+    qDebug() << "Mouse pressed: " << event->localPos().x() - view::RenderArea::BORDER_SIZE << "\t" <<
+                event->localPos().y() - view::RenderArea::BORDER_SIZE;
+    if (event->button() != Qt::MouseButton::LeftButton) return;
+    const auto eventPosition = utils::Vector2f(event->localPos().x() - view::RenderArea::BORDER_SIZE,
+                                               event->localPos().y() - view::RenderArea::BORDER_SIZE);
+    const auto ballId = _model.findBallByPosition(eventPosition);
+    if (ballId.isNull()) return;
+    _buttonPressedPosition = eventPosition;
+    _model.setBallFixed(ballId, true);
+    _fixedBall = ballId;
+    qDebug() << "Mouse pressed _fixedBall: " << _fixedBall.toStdSizeT();
 }
 
 void MainPresenter::Impl::mouseReleased(QMouseEvent* event)
 {
-
+    qDebug() << "Mouse released: " << event->localPos().x() - view::RenderArea::BORDER_SIZE << "\t" <<
+                event->localPos().y() - view::RenderArea::BORDER_SIZE;
+    const auto eventPosition = utils::Vector2f(event->localPos().x() - view::RenderArea::BORDER_SIZE,
+                                               event->localPos().y() - view::RenderArea::BORDER_SIZE);
+    if (event->button() == Qt::MouseButton::RightButton) {
+        if (_model.findBallByPosition(eventPosition).isNull()) {
+            const auto newBallId = _model.addBall(eventPosition);
+            _balls.emplace_back(newBallId, utils::Vector2f());
+        }
+    } else if (event->button() == Qt::MouseButton::LeftButton) {
+        if (_fixedBall.isNull()) return;
+        if ((eventPosition - _buttonPressedPosition).normSquare() > _deletingEpsilon) {
+            _model.setBallFixed(_fixedBall, false);
+        } else {
+        std::remove_if(_balls.begin(), _balls.end(), [this](const auto& ball) { return ball.id() == this->_fixedBall;});
+        _model.removeBall(_fixedBall);
+        }
+    }
+    _fixedBall = common::BallId::NULLID;
 }
 
 void MainPresenter::Impl::mouseMoved(QMouseEvent* event)
 {
-
+    if (event->buttons().testFlag(Qt::MouseButton::LeftButton) && !_fixedBall.isNull()) {
+        _model.moveBall(_fixedBall, utils::Vector2f(event->localPos().x() - view::RenderArea::BORDER_SIZE,
+                                                    event->localPos().y() - view::RenderArea::BORDER_SIZE));
+    }
 }
 
 const std::vector<view::Ball>& MainPresenter::Impl::ballsToDraw()

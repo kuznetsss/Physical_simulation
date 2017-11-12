@@ -18,7 +18,7 @@ public:
     { return _color; }
 
 private:
-    const QColor _color;
+    QColor _color;
 };
 
 }
