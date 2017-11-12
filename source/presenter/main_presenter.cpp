@@ -3,6 +3,7 @@
 #include <QApplication>
 
 #include "domain/model.h"
+#include "view/main_widow.h"
 
 namespace presenter {
 
@@ -21,6 +22,8 @@ int MainPresenter::init(int argc, char** argv)
 {
     _d->_model.startSimulation();
     QApplication app(argc, argv);
+    view::MainWindow mainWindow;
+    mainWindow.show();
     return app.exec();
 }
 
