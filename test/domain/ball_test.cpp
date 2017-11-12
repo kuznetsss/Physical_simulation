@@ -31,8 +31,6 @@ TEST_F(Ball_Test, RandomPositionAndId)
     EXPECT_GE(ball1.position().y(), FIELD_DOWN_WALL);
 
     const Ball ball2;
-    EXPECT_VECTORS_NE(ball1.position(), ball2.position());
-
     EXPECT_NE(ball1.id(), ball2.id());
 }
 

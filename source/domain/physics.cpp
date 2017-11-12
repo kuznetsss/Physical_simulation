@@ -13,7 +13,7 @@ utils::Vector2f Physics::calculateForceForBall(const domain::BallPtr &ball,
     utils::Vector2f totalForce;
     for (const auto& idAndBall : idToBallMap) {
         if (idAndBall.first == ballId) continue;
-        const auto deltaR = ballPosition - idAndBall.second->position();
+        const auto deltaR = idAndBall.second->position() - ballPosition;
         totalForce += deltaR.normalized() * (deltaR.norm() - 1.f) / deltaR.normSquare();
     }
     return totalForce;
