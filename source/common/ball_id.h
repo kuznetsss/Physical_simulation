@@ -1,9 +1,9 @@
-#ifndef DOMAIN_BALL_ID
-#define DOMAIN_BALL_ID
+#ifndef COMMON_BALL_ID
+#define COMMON_BALL_ID
 
 #include <cstddef>
 
-namespace domain {
+namespace common {
 
 class BallId
 {
@@ -33,6 +33,6 @@ inline bool operator==(const BallId& left, const BallId& right)
 
 inline bool operator!=(const BallId& left, const BallId& right)
 { return left._id != right._id; }
-} // namespace domain
 
-#endif // DOMAIN_BALL_ID
+} // namespace common
+#endif // COMMON_BALL_ID

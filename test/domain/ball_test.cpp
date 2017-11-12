@@ -5,6 +5,7 @@
 
 #include "utils/vector2f.h"
 #include "utils/constants.h"
+#include "common/ball_id.h"
 
 using namespace domain;
 

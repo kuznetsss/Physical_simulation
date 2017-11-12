@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "domain/ball.h"
+#include "common/ball_id.h"
 #include "utils/vector2f.h"
 #include "test_extesions.h"
 

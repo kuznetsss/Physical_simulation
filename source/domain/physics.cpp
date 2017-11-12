@@ -1,6 +1,7 @@
 #include "domain/physics.h"
 
 #include "utils/vector2f.h"
+#include "common/ball_id.h"
 
 namespace domain {
 

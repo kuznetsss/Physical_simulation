@@ -3,21 +3,35 @@
 
 #include <QWidget>
 
+namespace presenter {
+
+class IPresenter;
+
+} // namespace presenter
+
 namespace view {
+
+class Ball;
 
 class RenderArea: public QWidget
 {
     Q_OBJECT
 public:
-    RenderArea(QWidget* parent);
-    void paintEvent(QPaintEvent*);
+    RenderArea(QWidget* parent, presenter::IPresenter* iPresenter);
 
     static constexpr int BORDER_SIZE = 5;
     static constexpr int WIDTH = 800;
     static constexpr int HEIGHT = 600;
 
+protected:
+    void paintEvent(QPaintEvent*) override final;
+    void timerEvent(QTimerEvent*) override final;
+
 private:
     void drawBackground(QPainter* painter);
+    void drawBall(QPainter* painter, const view::Ball& ball);
+
+    presenter::IPresenter* _iPresenter;
 };
 
 } // namespace view

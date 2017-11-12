@@ -9,7 +9,7 @@
 
 namespace view {
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(presenter::IPresenter* iPresenter)
 {
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     QHBoxLayout* horizontalLayout = new QHBoxLayout(mainLayout->widget());
@@ -27,7 +27,7 @@ MainWindow::MainWindow()
 
     mainLayout->addLayout(horizontalLayout);
 
-    RenderArea* renderArea = new RenderArea(mainLayout->widget());
+    RenderArea* renderArea = new RenderArea(mainLayout->widget(), iPresenter);
     mainLayout->addWidget(renderArea);
     setLayout(mainLayout);
     setFixedSize(sizeHint());

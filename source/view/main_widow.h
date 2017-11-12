@@ -3,13 +3,19 @@
 
 #include <QDialog>
 
+namespace presenter {
+
+class IPresenter;
+
+} // namespace presenter
+
 namespace view {
 
 class MainWindow: public QDialog
 {
     Q_OBJECT
 public:
-    MainWindow();
+    MainWindow(presenter::IPresenter* iPresenter);
 };
 
 } // namespace view

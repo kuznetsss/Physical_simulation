@@ -2,7 +2,12 @@
 #define DOMAIN_BALL
 
 #include "utils/common_utils.h"
-#include "domain/ball_id.h"
+
+namespace common {
+
+class BallId;
+
+} // namespace common
 
 namespace utils {
 
@@ -28,13 +33,10 @@ public:
     void setFixed(bool fixed);
     bool isFixed() const;
 
-    constexpr float radius();
-    constexpr float mass();
-
     void applyForce(const utils::Vector2f& force, float deltaT);
     void makeStep(float deltaT);
 
-    BallId id() const;
+    const common::BallId& id() const;
 
 private:
     struct Impl;

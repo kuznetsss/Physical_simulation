@@ -2,23 +2,19 @@
 
 #include "utils/constants.h"
 #include "utils/vector2f.h"
+#include "common/ball_info.h"
 
 namespace domain {
-struct Ball::Impl
+struct Ball::Impl: public common::BallInfo
 {
     Impl(const utils::Vector2f& initPosition):
-        _position(initPosition),
+        common::BallInfo(std::hash<bool*>()(&_isFixed), initPosition),
         _velocity(utils::Vector2f()),
-        _id(std::hash<bool*>()(&_isFixed)),
         _isFixed(false)
     {}
 
-    utils::Vector2f _position;
     utils::Vector2f _velocity;
-    const BallId _id;
     bool _isFixed;
-    static constexpr float _radius = 5.f;
-    static constexpr float _mass = 1.f;
 };
 
 Ball::Ball():
@@ -34,12 +30,12 @@ Ball::~Ball() = default;
 
 void Ball::setPosition(const utils::Vector2f& newPosition)
 {
-    _d->_position = newPosition;
+    _d->setPosition(newPosition);
 }
 
 const utils::Vector2f& Ball::position() const
 {
-   return _d->_position;
+   return _d->position();
 }
 
 void Ball::setVelocity(const utils::Vector2f& newVelocity)
@@ -62,30 +58,20 @@ bool Ball::isFixed() const
     return _d->_isFixed;
 }
 
-constexpr float Ball::radius()
-{
-    return Impl::_radius;
-}
-
-constexpr float Ball::mass()
-{
-    return Impl::_mass;
-}
-
 void Ball::applyForce(const utils::Vector2f& force, const float deltaT)
 {
-    _d->_velocity += force * deltaT / mass();
+    _d->_velocity += force * deltaT / _d->mass();
 }
 
 void Ball::makeStep(const float deltaT)
 {
     // TODO добавить отскок на границе
-    if (!_d->_isFixed) _d->_position += _d->_velocity * deltaT;
+    if (!_d->_isFixed) _d->setPosition(_d->position() + _d->_velocity * deltaT);
 }
 
-BallId Ball::id() const
+const common::BallId& Ball::id() const
 {
-    return _d->_id;
+    return _d->id();
 }
 
 

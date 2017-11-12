@@ -5,7 +5,7 @@
 
 #include "utils/common_utils.h"
 #include "utils/vector2f.h"
-#include "domain/ball_id.h"
+#include "common/ball_info.h"
 
 namespace utils {
 
@@ -23,20 +23,22 @@ public:
 
     void addBall(const utils::Vector2f& position);
     void removeBall(const utils::Vector2f& position);
-    void removeBall(const BallId& ballId);
+    void removeBall(const common::BallId& ballId);
 
-    void moveBall(const BallId& ballId, const utils::Vector2f& position);
+    void moveBall(const common::BallId& ballId, const utils::Vector2f& position);
 
-    void setBallFixed(const BallId& ballId, bool fixed);
+    void setBallFixed(const common::BallId& ballId, bool fixed);
     void setBallFixed(const utils::Vector2f& position, bool fixed);
 
-    BallId findBallByPosition(const utils::Vector2f& position) const;
+    common::BallId findBallByPosition(const utils::Vector2f& position) const;
 
     void startSimulation();
 
+    std::vector<common::BallInfo> ballsInfo() const;
+
     std::size_t ballsNumber() const;
-    std::vector<BallId> ballIds() const;
-    utils::Vector2f ballPosition(const BallId& ballId) const;
+    std::vector<common::BallId> ballIds() const;
+    utils::Vector2f ballPosition(const common::BallId& ballId) const;
 
 private:
     struct Impl;
