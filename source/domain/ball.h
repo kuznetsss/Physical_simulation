@@ -27,8 +27,8 @@ public:
     void setPosition(const utils::Vector2f& newPosition);
     const utils::Vector2f& position() const;
 
-    void setVelocity(const utils::Vector2f& newVelocity);
-    const utils::Vector2f& velocity() const;
+    void setSpeed(const utils::Vector2f& newSpeed);
+    const utils::Vector2f& speed() const;
 
     void setFixed(bool fixed);
     bool isFixed() const;

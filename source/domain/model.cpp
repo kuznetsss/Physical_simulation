@@ -20,7 +20,7 @@ struct Model::Impl
     mutable std::mutex _mutex;
     bool _simulationIsActive = false;
     std::unique_ptr<std::thread> _thread;
-    static constexpr float _deltaT = 1.f;
+    static constexpr float _deltaT = 0.001f;
 };
 
 Model::Model():
@@ -83,6 +83,7 @@ void Model::startSimulation()
 
 std::vector<common::BallInfo> Model::ballsInfo() const
 {
+    std::lock_guard<std::mutex> lock(_d->_mutex);
     std::vector<common::BallInfo> result;
     for (const auto& idAndBall : _d->_idToBallMap) {
         result.emplace_back(idAndBall.second->id(), idAndBall.second->position());
@@ -115,7 +116,7 @@ utils::Vector2f Model::ballPosition(const common::BallId& ballId) const
 Model::Impl::Impl()
 {
     // TODO вынести в константу максимальное число шаров при старте
-   const std::size_t ballsInitialNumber = std::rand() % 10 + 1;
+   const std::size_t ballsInitialNumber = 10;
    for (std::size_t i = 0; i < ballsInitialNumber; i++) {
        // TODO дублирование с addBall
        const auto newBall = std::make_shared<Ball>();

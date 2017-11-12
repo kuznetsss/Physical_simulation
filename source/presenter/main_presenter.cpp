@@ -4,6 +4,7 @@
 
 #include "domain/model.h"
 #include "view/main_widow.h"
+#include "view/render_area.h"
 #include "presenter/i_presenter.h"
 
 namespace presenter {
@@ -30,14 +31,15 @@ MainPresenter::~MainPresenter() = default;
 
 int MainPresenter::init(int argc, char** argv)
 {
-    //_d->_model.startSimulation();
+    _d->_model.startSimulation();
     QApplication app(argc, argv);
     view::MainWindow mainWindow(_d.get());
     mainWindow.show();
     return app.exec();
 }
 
-MainPresenter::Impl::Impl()
+MainPresenter::Impl::Impl():
+    _model()
 {
     for (const auto& ballInfo : _model.ballsInfo()) {
         _balls.emplace_back(ballInfo.id(), ballInfo.position());

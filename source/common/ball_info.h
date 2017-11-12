@@ -23,17 +23,12 @@ public:
     const utils::Vector2f& position() const
     { return _position; }
 
-    float radius() const
-    { return _radius; }
-
-    float mass() const
-    { return _mass; }
+    static constexpr int RADIUS = 50;
+    static constexpr int MASS = 1;
 
 private:
     const common::BallId _id;
     utils::Vector2f _position;
-    static constexpr float _radius = 50.f;
-    static constexpr float _mass = 1.f;
 };
 
 } // namespace common

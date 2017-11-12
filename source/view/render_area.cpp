@@ -13,7 +13,7 @@ RenderArea::RenderArea(QWidget* parent, presenter::IPresenter* iPresenter):
     setFixedHeight(2*BORDER_SIZE + HEIGHT);
     setFixedWidth(2*BORDER_SIZE + WIDTH);
     setSizePolicy(QSizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed));
-    startTimer(33);
+    startTimer(40);
 }
 
 void RenderArea::paintEvent(QPaintEvent*)
@@ -46,10 +46,9 @@ void RenderArea::drawBall(QPainter* painter, const view::Ball& ball)
     painter->save();
     painter->setPen(QPen(Qt::black, 2));
     painter->setBrush(ball.color());
-    painter->drawEllipse(static_cast<int>(ball.position().x()),
-                         static_cast<int>(ball.position().y()),
-                         static_cast<int>(ball.radius()),
-                         static_cast<int>(ball.radius()));
+    painter->drawEllipse(BORDER_SIZE + static_cast<int>(ball.position().x()),
+                         BORDER_SIZE + static_cast<int>(ball.position().y()),
+                         ball.RADIUS, ball.RADIUS);
     painter->restore();
 }
 
