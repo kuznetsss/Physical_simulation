@@ -1,5 +1,9 @@
+#include <ctime>
+#include "presenter/main_presenter.h"
 
-int main()
+int main(int argc, char** argv)
 {
-    return 0;
+    std::srand(std::time(nullptr));
+    presenter::MainPresenter mainPresenter;
+    return mainPresenter.init(argc, argv);
 }
