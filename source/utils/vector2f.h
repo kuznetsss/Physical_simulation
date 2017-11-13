@@ -29,6 +29,8 @@ public:
     float normSquare() const;
     Vector2f normalized() const;
 
+    static constexpr float EPS = 0.0001f;
+
 private:
     float _x = 0;
     float _y = 0;

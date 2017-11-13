@@ -12,6 +12,7 @@ class Vector2f;
 namespace presenter {
 
 class IPresenter;
+class BallDrawingInfo;
 
 } // namespace presenter
 
@@ -38,7 +39,7 @@ protected:
 
 private:
     void drawBackground(QPainter* painter);
-    void drawBall(QPainter* painter, const utils::Vector2f& ball);
+    void drawBall(QPainter* painter, const presenter::BallDrawingInfo& ballDrawingInfo);
 
     presenter::IPresenter* _iPresenter;
 };

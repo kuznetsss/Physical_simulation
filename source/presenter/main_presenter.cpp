@@ -17,7 +17,7 @@ struct MainPresenter::Impl: public IPresenter
     void mousePressed(QMouseEvent* event) override final;
     void mouseReleased(QMouseEvent* event) override final;
     void mouseMoved(QMouseEvent* event) override final;
-    std::vector<utils::Vector2f> ballsToDraw() override final;
+    std::vector<BallDrawingInfo> ballsToDraw() override final;
 
     static utils::Vector2f convertToModelCordinates(const QPointF& position);
 
@@ -82,9 +82,13 @@ void MainPresenter::Impl::mouseReleased(QMouseEvent* event)
     _fixedBall = utils::Id::NULLID;
 }
 
-std::vector<utils::Vector2f> MainPresenter::Impl::ballsToDraw()
+std::vector<BallDrawingInfo> MainPresenter::Impl::ballsToDraw()
 {
-    return _model.ballsPositions();
+    std::vector<BallDrawingInfo> result;
+    for (const auto& position : _model.ballsPositions()) {
+        result.emplace_back(position);
+    }
+    return result;
 }
 
 utils::Vector2f MainPresenter::Impl::convertToModelCordinates(const QPointF &position)

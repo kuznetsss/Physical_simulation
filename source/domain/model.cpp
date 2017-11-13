@@ -117,10 +117,8 @@ utils::Vector2f Model::ballPosition(const utils::Id& ballId) const
 
 Model::Impl::Impl()
 {
-    // TODO вынести в константу максимальное число шаров при старте
    const std::size_t ballsInitialNumber = 2;
    for (std::size_t i = 0; i < ballsInitialNumber; i++) {
-       // TODO дублирование с addBall
        const auto newBall = std::make_shared<Ball>();
        _idToBallMap.emplace(newBall->id().toStdSizeT(), newBall);
    }

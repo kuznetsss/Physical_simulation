@@ -3,10 +3,21 @@
 
 #include <vector>
 #include "utils/vector2f.h"
+#include "domain/ball.h"
 
 class QMouseEvent;
 
 namespace presenter {
+
+struct BallDrawingInfo
+{
+    BallDrawingInfo(const utils::Vector2f& pos):
+        position(pos)
+    {}
+
+    utils::Vector2f position;
+    static constexpr int RADIUS = static_cast<int>(domain::Ball::RADIUS);
+};
 
 class IPresenter
 {
@@ -15,8 +26,9 @@ public:
     virtual void mousePressed(QMouseEvent* event) = 0;
     virtual void mouseReleased(QMouseEvent* event) = 0;
     virtual void mouseMoved(QMouseEvent* event) = 0;
-    virtual std::vector<utils::Vector2f> ballsToDraw() = 0;
+    virtual std::vector<BallDrawingInfo> ballsToDraw() = 0;
 };
+
 
 } // namespace presenter
 #endif // PRESENTER_I_PRESENTER

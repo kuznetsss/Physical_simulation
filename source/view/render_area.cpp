@@ -3,8 +3,6 @@
 #include <QPainter>
 
 #include "presenter/i_presenter.h"
-// TODO тут не должно быть domain
-#include "domain/ball.h"
 
 namespace view {
 
@@ -23,8 +21,8 @@ void RenderArea::paintEvent(QPaintEvent*)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     drawBackground(&painter);
-    for (const auto& position : _iPresenter->ballsToDraw()) {
-        drawBall(&painter, position);
+    for (const auto& ballDrawingInfo : _iPresenter->ballsToDraw()) {
+        drawBall(&painter, ballDrawingInfo);
     }
 }
 
@@ -58,14 +56,14 @@ void RenderArea::drawBackground(QPainter* painter)
     painter->restore();
 }
 
-void RenderArea::drawBall(QPainter* painter, const utils::Vector2f& position)
+void RenderArea::drawBall(QPainter* painter, const presenter::BallDrawingInfo& ballDrawingInfo)
 {
     painter->save();
     painter->setPen(QPen(Qt::black, 2));
     painter->setBrush(Qt::red);
-    painter->drawEllipse(BORDER_SIZE + static_cast<int>(position.x()) - domain::Ball::RADIUS,
-                         BORDER_SIZE + static_cast<int>(position.y())- domain::Ball::RADIUS,
-                         2 * domain::Ball::RADIUS, 2 * domain::Ball::RADIUS);
+    painter->drawEllipse(BORDER_SIZE + static_cast<int>(ballDrawingInfo.position.x()) - ballDrawingInfo.RADIUS,
+                         BORDER_SIZE + static_cast<int>(ballDrawingInfo.position.y())- ballDrawingInfo.RADIUS,
+                         2 * ballDrawingInfo.RADIUS, 2 * ballDrawingInfo.RADIUS);
     painter->restore();
 }
 

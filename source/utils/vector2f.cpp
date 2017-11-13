@@ -45,16 +45,12 @@ Vector2f operator/(const Vector2f& left, const float right)
 
 bool operator==(const Vector2f& left, const Vector2f& right)
 {
-    // TODO вынести константу
-    const float eps = 0.0001f;
-    return std::fabs(left._x - right._x) < eps && std::fabs(left._y - right._y) < eps;
+    return std::fabs(left._x - right._x) < Vector2f::EPS && std::fabs(left._y - right._y) < Vector2f::EPS;
 }
 
 bool operator!=(const Vector2f& left, const Vector2f& right)
 {
-    // TODO вынести константу
-    const float eps = 0.0001f;
-    return std::fabs(left._x - right._x) > eps || std::fabs(left._y - right._y) > eps;
+    return std::fabs(left._x - right._x) > Vector2f::EPS || std::fabs(left._y - right._y) > Vector2f::EPS;
 }
 
 float Vector2f::x() const
