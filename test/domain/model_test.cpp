@@ -43,7 +43,7 @@ TEST_F(Model_Test, BallOperations)
 TEST_F(Model_Test, SimulationRunning)
 {
     const auto initialBallsNumber = model.ballsNumber();
-    model.startSimulation();
+    model.startStopSimulation();
 
     EXPECT_NO_THROW(model.addBall(utils::Vector2f()));
     EXPECT_EQ(model.ballsNumber(), initialBallsNumber + 1);
@@ -67,12 +67,11 @@ TEST_F(Model_Test, BallsMoving)
     for (const auto& position : ballsPositions) {
         ballIds.emplace_back(model.addBall(position));
     }
-    model.startSimulation();
+    model.startStopSimulation();
     sleep(1);
 
     for (std::size_t i = 0; i < ballIds.size(); i++) {
         EXPECT_VECTORS_EQ(model.ballPosition(ballIds[i]), ballsPositions[i]);
-        const auto p = model.ballPosition(ballIds[i]);
     }
 
     model.addBall(utils::Vector2f(101.f, 101.f));

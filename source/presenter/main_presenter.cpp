@@ -19,6 +19,9 @@ struct MainPresenter::Impl: public IPresenter
     void mouseMoved(QMouseEvent* event) override final;
     std::vector<BallDrawingInfo> ballsToDraw() override final;
 
+    void deltaTChanged(const float newValue) override final;
+    void startStopPressed() override final;
+
     static utils::Vector2f convertToModelCordinates(const QPointF& position);
 
     domain::Model _model;
@@ -35,7 +38,7 @@ MainPresenter::~MainPresenter() = default;
 
 int MainPresenter::init(int argc, char** argv)
 {
-    _d->_model.startSimulation();
+    _d->_model.startStopSimulation();
     QApplication app(argc, argv);
     view::MainWindow mainWindow(_d.get());
     mainWindow.show();
@@ -89,6 +92,16 @@ std::vector<BallDrawingInfo> MainPresenter::Impl::ballsToDraw()
         result.emplace_back(position);
     }
     return result;
+}
+
+void MainPresenter::Impl::deltaTChanged(const float newValue)
+{
+    _model.setDeltaT(newValue);
+}
+
+void MainPresenter::Impl::startStopPressed()
+{
+    _model.startStopSimulation();
 }
 
 utils::Vector2f MainPresenter::Impl::convertToModelCordinates(const QPointF &position)

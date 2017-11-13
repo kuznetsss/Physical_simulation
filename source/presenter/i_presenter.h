@@ -27,6 +27,9 @@ public:
     virtual void mouseReleased(QMouseEvent* event) = 0;
     virtual void mouseMoved(QMouseEvent* event) = 0;
     virtual std::vector<BallDrawingInfo> ballsToDraw() = 0;
+
+    virtual void deltaTChanged(const float newValue) = 0;
+    virtual void startStopPressed() = 0;
 };
 
 

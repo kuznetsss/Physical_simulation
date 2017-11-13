@@ -15,6 +15,7 @@ struct Model::Impl
     ~Impl();
 
     void simulate();
+    void stopSimulation();
 
     std::unordered_map<std::size_t, BallPtr> _idToBallMap;
     mutable std::mutex _mutex;
@@ -82,14 +83,22 @@ std::vector<utils::Vector2f> Model::ballsPositions() const
     return result;
 }
 
-void Model::startSimulation()
+void Model::startStopSimulation()
 {
-    _d->_simulationIsActive = true;
-    _d->_thread = std::make_unique<std::thread>(&Impl::simulate, std::ref(*_d.get()));
+    if (!_d->_simulationIsActive)  {
+        _d->_simulationIsActive = true;
+        _d->_thread = std::make_unique<std::thread>(&Impl::simulate, std::ref(*_d.get()));
+    } else {
+        _d->_simulationIsActive = false;
+        for (auto& idAndBall : _d->_idToBallMap)
+            idAndBall.second->setSpeed(utils::Vector2f());
+        _d->stopSimulation();
+    }
 }
 
 void Model::setDeltaT(float deltaT)
 {
+    std::lock_guard<std::mutex> lock(_d->_mutex);
     _d->_deltaT = deltaT;
 }
 
@@ -126,12 +135,7 @@ Model::Impl::Impl()
 
 Model::Impl::~Impl()
 {
-    if (_simulationIsActive) {
-        _mutex.lock();
-        _simulationIsActive = false;
-        _mutex.unlock();
-        _thread->join();
-    }
+    if (_simulationIsActive) stopSimulation();
 }
 
 void Model::Impl::simulate()
@@ -147,6 +151,14 @@ void Model::Impl::simulate()
             idAndBall.second->makeStep(Impl::_deltaT);
         }
     }
+}
+
+void Model::Impl::stopSimulation()
+{
+    _mutex.lock();
+    _simulationIsActive = false;
+    _mutex.unlock();
+    _thread->join();
 }
 
 } // namespace domain

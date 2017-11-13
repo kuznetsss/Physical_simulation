@@ -32,7 +32,7 @@ public:
     utils::Id findBallByPosition(const utils::Vector2f& position) const;
     std::vector<utils::Vector2f> ballsPositions() const;
 
-    void startSimulation();
+    void startStopSimulation();
 
     void setDeltaT(float deltaT);
 
