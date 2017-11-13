@@ -3,6 +3,7 @@
 #include <QPainter>
 
 #include "presenter/i_presenter.h"
+#include "common/ball_info.h"
 
 namespace view {
 
@@ -21,8 +22,8 @@ void RenderArea::paintEvent(QPaintEvent*)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     drawBackground(&painter);
-    for (const auto& ball : _iPresenter->ballsToDraw()) {
-        drawBall(&painter, ball);
+    for (const auto& position : _iPresenter->ballsToDraw()) {
+        drawBall(&painter, position);
     }
 }
 
@@ -41,14 +42,14 @@ void RenderArea::drawBackground(QPainter* painter)
     painter->restore();
 }
 
-void RenderArea::drawBall(QPainter* painter, const view::Ball& ball)
+void RenderArea::drawBall(QPainter* painter, const utils::Vector2f& position)
 {
     painter->save();
     painter->setPen(QPen(Qt::black, 2));
-    painter->setBrush(ball.color());
-    painter->drawEllipse(BORDER_SIZE + static_cast<int>(ball.position().x()),
-                         BORDER_SIZE + static_cast<int>(ball.position().y()),
-                         ball.RADIUS, ball.RADIUS);
+    painter->setBrush(Qt::red);
+    painter->drawEllipse(BORDER_SIZE + static_cast<int>(position.x()) - common::BallInfo::RADIUS,
+                         BORDER_SIZE + static_cast<int>(position.y())- common::BallInfo::RADIUS,
+                         2 * common::BallInfo::RADIUS, 2 * common::BallInfo::RADIUS);
     painter->restore();
 }
 

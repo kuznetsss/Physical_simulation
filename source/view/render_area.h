@@ -3,6 +3,12 @@
 
 #include <QWidget>
 
+namespace utils {
+
+class Vector2f;
+
+} //namespace utils
+
 namespace presenter {
 
 class IPresenter;
@@ -29,7 +35,7 @@ protected:
 
 private:
     void drawBackground(QPainter* painter);
-    void drawBall(QPainter* painter, const view::Ball& ball);
+    void drawBall(QPainter* painter, const utils::Vector2f& ball);
 
     presenter::IPresenter* _iPresenter;
 };

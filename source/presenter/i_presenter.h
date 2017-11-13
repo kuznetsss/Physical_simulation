@@ -2,7 +2,7 @@
 #define PRESENTER_I_PRESENTER
 
 #include <vector>
-#include "view/ball.h"
+#include "utils/vector2f.h"
 
 class QMouseEvent;
 
@@ -15,7 +15,7 @@ public:
     virtual void mousePressed(QMouseEvent* event) = 0;
     virtual void mouseReleased(QMouseEvent* event) = 0;
     virtual void mouseMoved(QMouseEvent* event) = 0;
-    virtual const std::vector<view::Ball>& ballsToDraw() = 0;
+    virtual std::vector<utils::Vector2f> ballsToDraw() = 0;
 };
 
 } // namespace presenter

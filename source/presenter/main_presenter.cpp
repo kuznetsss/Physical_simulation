@@ -16,11 +16,9 @@ struct MainPresenter::Impl: public IPresenter
     void mousePressed(QMouseEvent* event) override final;
     void mouseReleased(QMouseEvent* event) override final;
     void mouseMoved(QMouseEvent* event) override final;
-    const std::vector<view::Ball>& ballsToDraw() override final;
+    std::vector<utils::Vector2f> ballsToDraw() override final;
 
     domain::Model _model;
-    // Вектор всегда содержит актуальное количество шаров, но не актуальные позиции
-    std::vector<view::Ball> _balls;
 };
 
 MainPresenter::MainPresenter():
@@ -40,11 +38,7 @@ int MainPresenter::init(int argc, char** argv)
 
 MainPresenter::Impl::Impl():
     _model()
-{
-    for (const auto& ballInfo : _model.ballsInfo()) {
-        _balls.emplace_back(ballInfo.id(), ballInfo.position());
-    }
-}
+{}
 
 void MainPresenter::Impl::mousePressed(QMouseEvent* event)
 {
@@ -61,12 +55,9 @@ void MainPresenter::Impl::mouseMoved(QMouseEvent* event)
 
 }
 
-const std::vector<view::Ball>& MainPresenter::Impl::ballsToDraw()
+std::vector<utils::Vector2f> MainPresenter::Impl::ballsToDraw()
 {
-    for (auto& ball : _balls) {
-        ball.setPosition(_model.ballPosition(ball.id()));
-    }
-    return _balls;
+    return _model.ballsPositions();
 }
 
 } // namespace presenter

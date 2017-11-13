@@ -75,6 +75,16 @@ common::BallId Model::findBallByPosition(const utils::Vector2f& position) const
     return common::BallId::NULLID;
 }
 
+std::vector<utils::Vector2f> Model::ballsPositions() const
+{
+    std::lock_guard<std::mutex> lock(_d->_mutex);
+    std::vector<utils::Vector2f> result;
+    for (const auto idAndBall : _d->_idToBallMap) {
+        result.emplace_back(idAndBall.second->position());
+    }
+    return result;
+}
+
 void Model::startSimulation()
 {
     _d->_simulationIsActive = true;
