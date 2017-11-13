@@ -3,15 +3,10 @@
 
 #include "utils/common_utils.h"
 
-namespace common {
-
-class BallId;
-
-} // namespace common
-
 namespace utils {
 
 class Vector2f;
+class Id;
 
 } //namespace utils
 
@@ -36,7 +31,7 @@ public:
     void applyForce(const utils::Vector2f& force, float deltaT);
     void makeStep(float deltaT);
 
-    const common::BallId& id() const;
+    const utils::Id& id() const;
 
     static constexpr int RADIUS = 25;
     static constexpr int MASS = 1;

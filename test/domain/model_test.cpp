@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "test_extesions.h"
-#include "common/ball_id.h"
+#include "utils/id.h"
 
 using namespace domain;
 
@@ -26,7 +26,7 @@ TEST_F(Model_Test, BallOperations)
     const auto ballPosition = utils::Vector2f(0.f, 0.f);
     model.addBall(ballPosition);
     EXPECT_EQ(model.ballsNumber(), 1);
-    EXPECT_NE(model.findBallByPosition(ballPosition), common::BallId(common::BallId::NULLID));
+    EXPECT_FALSE(model.findBallByPosition(ballPosition).isNull());
 
     const auto newBallPosition = utils::Vector2f(10.f, -50.f);
     model.moveBall(model.ballIds().at(0), newBallPosition);
@@ -66,13 +66,13 @@ TEST_F(Model_Test, BallsMoving)
     sleep(1);
 
     for (const auto& position : ballsPositions) {
-        EXPECT_NE(model.findBallByPosition(position), common::BallId(common::BallId::NULLID));
+        EXPECT_NE(model.findBallByPosition(position), utils::Id(utils::Id::NULLID));
     }
 
     model.addBall(utils::Vector2f(0.5f, 0.f));
     sleep(1);
 
     for (const auto& position : ballsPositions) {
-        EXPECT_EQ(model.findBallByPosition(position), common::BallId(common::BallId::NULLID));
+        EXPECT_EQ(model.findBallByPosition(position), utils::Id(utils::Id::NULLID));
     }
 }

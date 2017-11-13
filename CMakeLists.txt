@@ -26,6 +26,7 @@ file(GLOB_RECURSE TESTS_HEADERS ${PROJECT_SOURCE_DIR}/source/domain/*.h
 
 include_directories(${PROJECT_SOURCE_DIR}/test)
 
+set(GTEST_ROOT /usr/src/gtest)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 

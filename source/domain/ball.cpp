@@ -1,7 +1,7 @@
 #include "domain/ball.h"
 
 #include "utils/vector2f.h"
-#include "common/ball_id.h"
+#include "utils/id.h"
 #include "common/field_sizes.h"
 
 
@@ -16,7 +16,7 @@ struct Ball::Impl
         _isFixed(false)
     {}
 
-    const common::BallId _id;
+    const utils::Id _id;
     utils::Vector2f _position;
     utils::Vector2f _speed;
     bool _isFixed;
@@ -93,7 +93,7 @@ void Ball::makeStep(const float deltaT)
     setPosition(speedChanged ? calculateNewPosition() : newPosition);
 }
 
-const common::BallId& Ball::id() const
+const utils::Id& Ball::id() const
 {
     return _d->_id;
 }

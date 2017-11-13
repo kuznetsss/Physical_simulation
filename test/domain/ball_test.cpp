@@ -4,8 +4,8 @@
 #include "test_extesions.h"
 
 #include "utils/vector2f.h"
+#include "utils/id.h"
 #include "common/field_sizes.h"
-#include "common/ball_id.h"
 
 using namespace domain;
 
@@ -26,7 +26,7 @@ protected:
 TEST_F(Ball_Test, RandomPositionAndId)
 {
     const Ball ball1;
-    EXPECT_LE(ball1.position().x(), FIELD_HEIGHT - Ball::RADIUS);
+    EXPECT_LE(ball1.position().x(), FIELD_WIDTH - Ball::RADIUS);
     EXPECT_LE(ball1.position().y(), FIELD_HEIGHT - Ball::RADIUS);
     EXPECT_GE(ball1.position().x(), float(Ball::RADIUS));
     EXPECT_GE(ball1.position().y(), float(Ball::RADIUS));

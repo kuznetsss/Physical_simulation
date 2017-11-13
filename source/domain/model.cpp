@@ -29,14 +29,14 @@ Model::Model():
 
 Model::~Model() = default;
 
-void Model::addBall(const utils::Vector2f &position)
+void Model::addBall(const utils::Vector2f& position)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     const auto newBall = std::make_shared<Ball>(position);
     _d->_idToBallMap.emplace(newBall->id().toStdSizeT(), newBall);
 }
 
-void Model::removeBall(const common::BallId& ballId)
+void Model::removeBall(const utils::Id& ballId)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     _d->_idToBallMap.erase(_d->_idToBallMap.find(ballId.toStdSizeT()));
@@ -48,13 +48,13 @@ void Model::removeBall(const utils::Vector2f &position)
     if (!ballId.isNull()) removeBall(ballId);
 }
 
-void Model::moveBall(const common::BallId& ballId, const utils::Vector2f& position)
+void Model::moveBall(const utils::Id& ballId, const utils::Vector2f& position)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     _d->_idToBallMap.at(ballId.toStdSizeT())->setPosition(position);
 }
 
-void Model::setBallFixed(const common::BallId& ballId, const bool fixed)
+void Model::setBallFixed(const utils::Id& ballId, const bool fixed)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     _d->_idToBallMap.at(ballId.toStdSizeT())->setFixed(fixed);
@@ -65,14 +65,14 @@ void Model::setBallFixed(const utils::Vector2f& position, const bool fixed)
     setBallFixed(findBallByPosition(position), fixed);
 }
 
-common::BallId Model::findBallByPosition(const utils::Vector2f& position) const
+utils::Id Model::findBallByPosition(const utils::Vector2f& position) const
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     for (const auto& idAndBall : _d->_idToBallMap) {
         if (idAndBall.second->position() == position)
             return idAndBall.first;
     }
-    return common::BallId::NULLID;
+    return utils::Id::NULLID;
 }
 
 std::vector<utils::Vector2f> Model::ballsPositions() const
@@ -97,17 +97,17 @@ std::size_t Model::ballsNumber() const
     return _d->_idToBallMap.size();
 }
 
-std::vector<common::BallId> Model::ballIds() const
+std::vector<utils::Id> Model::ballIds() const
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
-    std::vector<common::BallId> result;
+    std::vector<utils::Id> result;
     for (const auto& idAndBall : _d->_idToBallMap) {
         result.push_back(idAndBall.first);
     }
     return result;
 }
 
-utils::Vector2f Model::ballPosition(const common::BallId& ballId) const
+utils::Vector2f Model::ballPosition(const utils::Id& ballId) const
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     return _d->_idToBallMap.at(ballId.toStdSizeT())->position();
