@@ -3,7 +3,8 @@
 #include <QPainter>
 
 #include "presenter/i_presenter.h"
-#include "common/ball_info.h"
+// TODO тут не должно быть domain
+#include "domain/ball.h"
 
 namespace view {
 
@@ -47,9 +48,9 @@ void RenderArea::drawBall(QPainter* painter, const utils::Vector2f& position)
     painter->save();
     painter->setPen(QPen(Qt::black, 2));
     painter->setBrush(Qt::red);
-    painter->drawEllipse(BORDER_SIZE + static_cast<int>(position.x()) - common::BallInfo::RADIUS,
-                         BORDER_SIZE + static_cast<int>(position.y())- common::BallInfo::RADIUS,
-                         2 * common::BallInfo::RADIUS, 2 * common::BallInfo::RADIUS);
+    painter->drawEllipse(BORDER_SIZE + static_cast<int>(position.x()) - domain::Ball::RADIUS,
+                         BORDER_SIZE + static_cast<int>(position.y())- domain::Ball::RADIUS,
+                         2 * domain::Ball::RADIUS, 2 * domain::Ball::RADIUS);
     painter->restore();
 }
 

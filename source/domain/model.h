@@ -5,7 +5,7 @@
 
 #include "utils/common_utils.h"
 #include "utils/vector2f.h"
-#include "common/ball_info.h"
+#include "common/ball_id.h"
 
 namespace utils {
 
@@ -34,8 +34,6 @@ public:
     std::vector<utils::Vector2f> ballsPositions() const;
 
     void startSimulation();
-
-    std::vector<common::BallInfo> ballsInfo() const;
 
     std::size_t ballsNumber() const;
     std::vector<common::BallId> ballIds() const;

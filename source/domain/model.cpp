@@ -79,7 +79,7 @@ std::vector<utils::Vector2f> Model::ballsPositions() const
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     std::vector<utils::Vector2f> result;
-    for (const auto idAndBall : _d->_idToBallMap) {
+    for (const auto& idAndBall : _d->_idToBallMap) {
         result.emplace_back(idAndBall.second->position());
     }
     return result;
@@ -89,16 +89,6 @@ void Model::startSimulation()
 {
     _d->_simulationIsActive = true;
     _d->_thread = std::make_unique<std::thread>(&Impl::simulate, std::ref(*_d.get()));
-}
-
-std::vector<common::BallInfo> Model::ballsInfo() const
-{
-    std::lock_guard<std::mutex> lock(_d->_mutex);
-    std::vector<common::BallInfo> result;
-    for (const auto& idAndBall : _d->_idToBallMap) {
-        result.emplace_back(idAndBall.second->id(), idAndBall.second->position());
-    }
-    return result;
 }
 
 std::size_t Model::ballsNumber() const

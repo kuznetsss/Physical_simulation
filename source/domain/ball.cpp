@@ -1,27 +1,30 @@
 #include "domain/ball.h"
 
 #include "utils/vector2f.h"
-#include "common/ball_info.h"
+#include "common/ball_id.h"
 #include "common/field_sizes.h"
 
 
 namespace domain {
 
-struct Ball::Impl: public common::BallInfo
+struct Ball::Impl
 {
     Impl(const utils::Vector2f& initPosition):
-        common::BallInfo(std::hash<bool*>()(&_isFixed), initPosition),
+        _id(std::hash<bool*>()(&_isFixed)),
+        _position(initPosition),
         _speed(utils::Vector2f()),
         _isFixed(false)
     {}
 
+    const common::BallId _id;
+    utils::Vector2f _position;
     utils::Vector2f _speed;
     bool _isFixed;
 };
 
 Ball::Ball():
-    _d(std::make_unique<Impl>(utils::Vector2f(std::rand() % (FIELD_WIDTH - 2 * _d->RADIUS) + _d->RADIUS,
-                                              std::rand() % (FIELD_HEIGHT - 2 * _d->RADIUS) + _d->RADIUS)))
+    _d(std::make_unique<Impl>(utils::Vector2f(std::rand() % (FIELD_WIDTH - 2 * RADIUS) + RADIUS,
+                                              std::rand() % (FIELD_HEIGHT - 2 * RADIUS) + RADIUS)))
 {}
 
 Ball::Ball(const utils::Vector2f& position):
@@ -32,12 +35,12 @@ Ball::~Ball() = default;
 
 void Ball::setPosition(const utils::Vector2f& newPosition)
 {
-    _d->setPosition(newPosition);
+    _d->_position = newPosition;
 }
 
 const utils::Vector2f& Ball::position() const
 {
-   return _d->position();
+   return _d->_position;
 }
 
 void Ball::setSpeed(const utils::Vector2f& newSpeed)
@@ -62,7 +65,7 @@ bool Ball::isFixed() const
 
 void Ball::applyForce(const utils::Vector2f& force, const float deltaT)
 {
-    _d->_speed += force * deltaT / _d->MASS;
+    _d->_speed += force * deltaT / MASS;
 }
 
 void Ball::makeStep(const float deltaT)
@@ -70,29 +73,29 @@ void Ball::makeStep(const float deltaT)
     if (_d->_isFixed) return;
 
     auto calculateNewPosition = [deltaT, this]() {
-        return _d->position() + _d->_speed * deltaT;
+        return _d->_position + _d->_speed * deltaT;
     };
 
     auto newPosition = calculateNewPosition();
     bool speedChanged = false;
-    if (newPosition.x() > FIELD_WIDTH - _d->RADIUS || newPosition.x() <  _d->RADIUS)
+    if (newPosition.x() > FIELD_WIDTH - RADIUS || newPosition.x() <  RADIUS)
     {
         _d->_speed = utils::Vector2f(_d->_speed.x() * (-1), _d->_speed.y());
         speedChanged = true;
     }
-    if (newPosition.y() > FIELD_HEIGHT - _d->RADIUS || newPosition.y() <  _d->RADIUS)
+    if (newPosition.y() > FIELD_HEIGHT - RADIUS || newPosition.y() <  RADIUS)
     {
         _d->_speed = utils::Vector2f(_d->_speed.x(), _d->_speed.y() * (-1));
         speedChanged = true;
     }
 
     // Если скорость изменилась, нужно пересчитать новую координату
-     _d->setPosition(speedChanged ? calculateNewPosition() : newPosition);
+    setPosition(speedChanged ? calculateNewPosition() : newPosition);
 }
 
 const common::BallId& Ball::id() const
 {
-    return _d->id();
+    return _d->_id;
 }
 
 } // namespace domain

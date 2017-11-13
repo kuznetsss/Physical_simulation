@@ -38,6 +38,9 @@ public:
 
     const common::BallId& id() const;
 
+    static constexpr int RADIUS = 25;
+    static constexpr int MASS = 1;
+
 private:
     struct Impl;
     utils::ImplPtr<Impl> _d;

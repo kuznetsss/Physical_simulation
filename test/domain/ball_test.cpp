@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 #include "test_extesions.h"
 
-#include "common/ball_info.h"
 #include "utils/vector2f.h"
 #include "common/field_sizes.h"
 #include "common/ball_id.h"
@@ -27,10 +26,10 @@ protected:
 TEST_F(Ball_Test, RandomPositionAndId)
 {
     const Ball ball1;
-    EXPECT_LE(ball1.position().x(), FIELD_HEIGHT - common::BallInfo::RADIUS);
-    EXPECT_LE(ball1.position().y(), FIELD_HEIGHT - common::BallInfo::RADIUS);
-    EXPECT_GE(ball1.position().x(), float(common::BallInfo::RADIUS));
-    EXPECT_GE(ball1.position().y(), float(common::BallInfo::RADIUS));
+    EXPECT_LE(ball1.position().x(), FIELD_HEIGHT - Ball::RADIUS);
+    EXPECT_LE(ball1.position().y(), FIELD_HEIGHT - Ball::RADIUS);
+    EXPECT_GE(ball1.position().x(), float(Ball::RADIUS));
+    EXPECT_GE(ball1.position().y(), float(Ball::RADIUS));
 
     const Ball ball2;
     EXPECT_NE(ball1.id(), ball2.id());
