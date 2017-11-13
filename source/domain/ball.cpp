@@ -72,7 +72,7 @@ bool Ball::isFixed() const
 
 void Ball::applyForce(const utils::Vector2f& force, const float deltaT)
 {
-    _d->_speed += force * deltaT / MASS;
+    setSpeed(_d->_speed + force * deltaT / MASS);
 }
 
 void Ball::makeStep(const float deltaT)
@@ -97,7 +97,7 @@ void Ball::makeStep(const float deltaT)
     }
 
     // Если скорость изменилась, нужно пересчитать новую координату
-    _d->_position = speedChanged ? calculateNewPosition() : newPosition;
+    setPosition(speedChanged ? calculateNewPosition() : newPosition);
 }
 
 const utils::Id& Ball::id() const
