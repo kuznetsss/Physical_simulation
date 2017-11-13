@@ -16,6 +16,12 @@ struct Ball::Impl
         _isFixed(false)
     {}
 
+    bool checkXCordinateInField(const float x)
+    { return x < FIELD_WIDTH - RADIUS && x > RADIUS; }
+
+    bool checkYCordinateInField(const float y)
+    { return y < FIELD_HEIGHT - RADIUS && y > RADIUS; }
+
     const utils::Id _id;
     utils::Vector2f _position;
     utils::Vector2f _speed;
@@ -35,7 +41,8 @@ Ball::~Ball() = default;
 
 void Ball::setPosition(const utils::Vector2f& newPosition)
 {
-    _d->_position = newPosition;
+    if (_d->checkXCordinateInField(newPosition.x())) _d->_position.setX(newPosition.x());
+    if (_d->checkYCordinateInField(newPosition.y())) _d->_position.setY(newPosition.y());
 }
 
 const utils::Vector2f& Ball::position() const
@@ -78,19 +85,19 @@ void Ball::makeStep(const float deltaT)
 
     auto newPosition = calculateNewPosition();
     bool speedChanged = false;
-    if (newPosition.x() > FIELD_WIDTH - RADIUS || newPosition.x() <  RADIUS)
+    if (!_d->checkXCordinateInField(newPosition.x()))
     {
         _d->_speed = utils::Vector2f(_d->_speed.x() * (-1), _d->_speed.y());
         speedChanged = true;
     }
-    if (newPosition.y() > FIELD_HEIGHT - RADIUS || newPosition.y() <  RADIUS)
+    if (!_d->checkYCordinateInField(newPosition.y()))
     {
         _d->_speed = utils::Vector2f(_d->_speed.x(), _d->_speed.y() * (-1));
         speedChanged = true;
     }
 
     // Если скорость изменилась, нужно пересчитать новую координату
-    setPosition(speedChanged ? calculateNewPosition() : newPosition);
+    _d->_position = speedChanged ? calculateNewPosition() : newPosition;
 }
 
 const utils::Id& Ball::id() const

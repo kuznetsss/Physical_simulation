@@ -21,19 +21,20 @@ public:
     Model();
     ~Model();
 
-    void addBall(const utils::Vector2f& position);
+    utils::Id addBall(const utils::Vector2f& position);
     void removeBall(const utils::Vector2f& position);
     void removeBall(const utils::Id& ballId);
 
     void moveBall(const utils::Id& ballId, const utils::Vector2f& position);
 
     void setBallFixed(const utils::Id& ballId, bool fixed);
-    void setBallFixed(const utils::Vector2f& position, bool fixed);
 
     utils::Id findBallByPosition(const utils::Vector2f& position) const;
     std::vector<utils::Vector2f> ballsPositions() const;
 
     void startSimulation();
+
+    void setDeltaT(float deltaT);
 
     std::size_t ballsNumber() const;
     std::vector<utils::Id> ballIds() const;

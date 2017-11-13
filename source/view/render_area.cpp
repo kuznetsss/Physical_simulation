@@ -33,6 +33,21 @@ void RenderArea::timerEvent(QTimerEvent*)
     repaint();
 }
 
+void RenderArea::mousePressEvent(QMouseEvent* event)
+{
+    _iPresenter->mousePressed(event);
+}
+
+void RenderArea::mouseMoveEvent(QMouseEvent* event)
+{
+    _iPresenter->mouseMoved(event);
+}
+
+void RenderArea::mouseReleaseEvent(QMouseEvent* event)
+{
+    _iPresenter->mouseReleased(event);
+}
+
 void RenderArea::drawBackground(QPainter* painter)
 {
     painter->save();

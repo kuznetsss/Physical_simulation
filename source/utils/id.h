@@ -25,7 +25,7 @@ public:
     static constexpr std::size_t NULLID = 0;
 
 private:
-    const std::size_t _id;
+    std::size_t _id;
 };
 
 inline bool operator==(const Id& left, const Id& right)

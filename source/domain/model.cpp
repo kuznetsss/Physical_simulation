@@ -20,7 +20,7 @@ struct Model::Impl
     mutable std::mutex _mutex;
     bool _simulationIsActive = false;
     std::unique_ptr<std::thread> _thread;
-    static constexpr float _deltaT = 0.001f;
+    float _deltaT = 0.0001f;
 };
 
 Model::Model():
@@ -29,11 +29,12 @@ Model::Model():
 
 Model::~Model() = default;
 
-void Model::addBall(const utils::Vector2f& position)
+utils::Id Model::addBall(const utils::Vector2f& position)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     const auto newBall = std::make_shared<Ball>(position);
     _d->_idToBallMap.emplace(newBall->id().toStdSizeT(), newBall);
+    return newBall->id();
 }
 
 void Model::removeBall(const utils::Id& ballId)
@@ -57,19 +58,15 @@ void Model::moveBall(const utils::Id& ballId, const utils::Vector2f& position)
 void Model::setBallFixed(const utils::Id& ballId, const bool fixed)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
+    if (!fixed) _d->_idToBallMap.at(ballId.toStdSizeT())->setSpeed(utils::Vector2f());
     _d->_idToBallMap.at(ballId.toStdSizeT())->setFixed(fixed);
-}
-
-void Model::setBallFixed(const utils::Vector2f& position, const bool fixed)
-{
-    setBallFixed(findBallByPosition(position), fixed);
 }
 
 utils::Id Model::findBallByPosition(const utils::Vector2f& position) const
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
     for (const auto& idAndBall : _d->_idToBallMap) {
-        if (idAndBall.second->position() == position)
+        if ((idAndBall.second->position() - position).normSquare() < Ball::RADIUS_SQUARE)
             return idAndBall.first;
     }
     return utils::Id::NULLID;
@@ -89,6 +86,11 @@ void Model::startSimulation()
 {
     _d->_simulationIsActive = true;
     _d->_thread = std::make_unique<std::thread>(&Impl::simulate, std::ref(*_d.get()));
+}
+
+void Model::setDeltaT(float deltaT)
+{
+    _d->_deltaT = deltaT;
 }
 
 std::size_t Model::ballsNumber() const
@@ -116,7 +118,7 @@ utils::Vector2f Model::ballPosition(const utils::Id& ballId) const
 Model::Impl::Impl()
 {
     // TODO вынести в константу максимальное число шаров при старте
-   const std::size_t ballsInitialNumber = 10;
+   const std::size_t ballsInitialNumber = 2;
    for (std::size_t i = 0; i < ballsInitialNumber; i++) {
        // TODO дублирование с addBall
        const auto newBall = std::make_shared<Ball>();

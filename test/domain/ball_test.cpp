@@ -54,7 +54,7 @@ TEST_F(Ball_Test, MakeStep)
     EXPECT_VECTORS_EQ(ball.position(), latestPosition);
     ball.setFixed(false);
 
-    const auto rightUpCorner = utils::Vector2f(FIELD_WIDTH, FIELD_HEIGHT);
+    const auto rightUpCorner = utils::Vector2f(FIELD_WIDTH - Ball::RADIUS - 0.5f, FIELD_HEIGHT - Ball::RADIUS - 0.5f);
     ball.setPosition(rightUpCorner);
     ball.makeStep(deltaT);
 

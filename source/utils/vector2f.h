@@ -22,9 +22,9 @@ public:
     friend bool operator!=(const Vector2f& left, const Vector2f& right);
 
     float x() const;
-    float& x();
+    void setX(float x);
     float y() const;
-    float& y();
+    void setY(float y);
     float norm() const;
     float normSquare() const;
     Vector2f normalized() const;

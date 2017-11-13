@@ -62,9 +62,9 @@ float Vector2f::x() const
     return _x;
 }
 
-float& Vector2f::x()
+void Vector2f::setX(const float x)
 {
-    return _x;
+    _x = x;
 }
 
 float Vector2f::y() const
@@ -72,9 +72,9 @@ float Vector2f::y() const
     return _y;
 }
 
-float& Vector2f::y()
+void Vector2f::setY(const float y)
 {
-    return _y;
+    _y = y;
 }
 
 float Vector2f::norm() const

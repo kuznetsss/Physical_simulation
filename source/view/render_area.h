@@ -32,6 +32,9 @@ public:
 protected:
     void paintEvent(QPaintEvent*) override final;
     void timerEvent(QTimerEvent*) override final;
+    void mousePressEvent(QMouseEvent* event) override final;
+    void mouseMoveEvent(QMouseEvent* event) override final;
+    void mouseReleaseEvent(QMouseEvent* event) override final;
 
 private:
     void drawBackground(QPainter* painter);

@@ -34,6 +34,7 @@ public:
     const utils::Id& id() const;
 
     static constexpr int RADIUS = 25;
+    static constexpr int RADIUS_SQUARE = RADIUS * RADIUS;
     static constexpr int MASS = 1;
 
 private:
