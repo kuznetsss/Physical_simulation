@@ -1,7 +1,6 @@
 #include "view/render_area.h"
 
 #include <QPainter>
-#include <QTimer>
 
 #include "presenter/i_presenter.h"
 
@@ -9,15 +8,12 @@ namespace view {
 
 RenderArea::RenderArea(QWidget* parent, presenter::IPresenter* iPresenter):
     QWidget(parent),
-    _iPresenter(iPresenter),
-    _timer(new QTimer(this))
+    _iPresenter(iPresenter)
 {
     setFixedHeight(2*BORDER_SIZE + HEIGHT);
     setFixedWidth(2*BORDER_SIZE + WIDTH);
     setSizePolicy(QSizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed));
-    connect(_timer, &QTimer::timeout, this, &RenderArea::timerTimeout);
-    _timer->start(40);
-
+    startTimer(40);
 }
 
 void RenderArea::paintEvent(QPaintEvent*)
@@ -30,24 +26,9 @@ void RenderArea::paintEvent(QPaintEvent*)
     }
 }
 
-void RenderArea::timerTimeout()
+void RenderArea::timerEvent(QTimerEvent*)
 {
     repaint();
-}
-
-void RenderArea::mousePressEvent(QMouseEvent* event)
-{
-    _iPresenter->mousePressed(event);
-}
-
-void RenderArea::mouseReleaseEvent(QMouseEvent* event)
-{
-    _iPresenter->mouseReleased(event);
-}
-
-void RenderArea::mouseMoveEvent(QMouseEvent* event)
-{
-    _iPresenter->mouseMoved(event);
 }
 
 void RenderArea::drawBackground(QPainter* painter)
@@ -65,8 +46,8 @@ void RenderArea::drawBall(QPainter* painter, const view::Ball& ball)
     painter->save();
     painter->setPen(QPen(Qt::black, 2));
     painter->setBrush(ball.color());
-    painter->drawEllipse(BORDER_SIZE + static_cast<int>(ball.position().x()) - ball.RADIUS / 2,
-                         BORDER_SIZE + static_cast<int>(ball.position().y()) - ball.RADIUS / 2,
+    painter->drawEllipse(BORDER_SIZE + static_cast<int>(ball.position().x()),
+                         BORDER_SIZE + static_cast<int>(ball.position().y()),
                          ball.RADIUS, ball.RADIUS);
     painter->restore();
 }

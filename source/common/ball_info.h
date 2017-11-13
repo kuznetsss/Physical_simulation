@@ -27,7 +27,7 @@ public:
     static constexpr int MASS = 1;
 
 private:
-    common::BallId _id;
+    const common::BallId _id;
     utils::Vector2f _position;
 };
 

@@ -25,7 +25,7 @@ public:
     static constexpr std::size_t NULLID = 0;
 
 private:
-    std::size_t _id;
+    const std::size_t _id;
 };
 
 inline bool operator==(const BallId& left, const BallId& right)

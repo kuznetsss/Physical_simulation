@@ -21,7 +21,7 @@ public:
     Model();
     ~Model();
 
-    common::BallId addBall(const utils::Vector2f& position);
+    void addBall(const utils::Vector2f& position);
     void removeBall(const utils::Vector2f& position);
     void removeBall(const common::BallId& ballId);
 
