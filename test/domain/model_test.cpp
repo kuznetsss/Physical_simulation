@@ -7,6 +7,9 @@
 #include "test_extesions.h"
 #include "utils/id.h"
 
+#include "domain/ball.h"
+#include "common/field_sizes.h"
+
 using namespace domain;
 
 class Model_Test: public ::testing::Test
@@ -79,7 +82,16 @@ TEST_F(Model_Test, BallsMoving)
 
     for (std::size_t i = 0; i < ballIds.size(); i++) {
         EXPECT_VECTORS_NE(model.ballPosition(ballIds[i]), ballsPositions[i]);
-        const auto p = model.ballPosition(ballIds[i]);
-        std::cout << p.x() << "\t" << p.y() << std::endl;
+    }
+}
+
+TEST_F(Model_Test, LongSimulation)
+{
+    model.setDeltaT(10.f);
+    model.startStopSimulation();
+    sleep(30);
+    for (const auto& ballPosition : model.ballsPositions()) {
+        EXPECT_TRUE(ballPosition.x() > Ball::RADIUS && ballPosition.x() < FIELD_WIDTH - Ball::RADIUS);
+        EXPECT_TRUE(ballPosition.y() > Ball::RADIUS && ballPosition.y() < FIELD_HEIGHT - Ball::RADIUS);
     }
 }

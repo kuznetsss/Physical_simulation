@@ -62,3 +62,9 @@ TEST_F(Ball_Test, MakeStep)
     EXPECT_VECTORS_EQ(ball.position(), rightUpCorner - initialSpeed * deltaT);
 
 }
+
+TEST_F(Ball_Test, SetPositionOutOfField)
+{
+    ball.setPosition(utils::Vector2f(FIELD_WIDTH * 2, FIELD_HEIGHT * 2));
+    EXPECT_VECTORS_EQ(ball.position(), initialPosition);
+}
