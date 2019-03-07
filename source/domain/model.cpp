@@ -21,7 +21,7 @@ struct Model::Impl
     mutable std::mutex _mutex;
     bool _simulationIsActive = false;
     std::unique_ptr<std::thread> _thread;
-    float _deltaT = 0.0001f;
+    float _deltaT = 0.001f;
 };
 
 Model::Model():
@@ -96,6 +96,11 @@ void Model::startStopSimulation()
     }
 }
 
+float Model::deltaT() const
+{
+  return _d->_deltaT;
+}
+
 void Model::setDeltaT(float deltaT)
 {
     std::lock_guard<std::mutex> lock(_d->_mutex);
@@ -141,13 +146,14 @@ Model::Impl::~Impl()
 void Model::Impl::simulate()
 {
     while (_simulationIsActive) {
-        std::lock_guard<std::mutex> lock(_mutex);
         for (auto& idAndBall : _idToBallMap) {
+            std::lock_guard<std::mutex> lock(_mutex);
             const auto force = Physics::calculateForceForBall(idAndBall.second, _idToBallMap);
             idAndBall.second->applyForce(force, Impl::_deltaT);
         }
 
         for (auto& idAndBall : _idToBallMap) {
+            std::lock_guard<std::mutex> lock(_mutex);
             idAndBall.second->makeStep(Impl::_deltaT);
         }
     }

@@ -52,10 +52,12 @@ QLayout* MainWindow::initTimePerStepLayout(QWidget* parent)
     QLabel* label = new QLabel(tr("Time/step: "), timePerStepLayout->widget());
     timePerStepLayout->addWidget(label);
 
-    QLineEdit* textBox = new QLineEdit(QString("0.0001"), timePerStepLayout->widget());
+    QLineEdit* textBox = new QLineEdit(timePerStepLayout->widget());
+    textBox->setText(QString::number(static_cast<double>(_iPresenter->deltaT()),
+                                     'f', 4));
     connect(textBox, &QLineEdit::textChanged, this, &MainWindow::timePerStepChanged);
     textBox->setAlignment(Qt::Alignment(Qt::AlignmentFlag::AlignRight));
-    const QRegExp regExp("([0][.][0-9]{0,5})|([1][.][0]{0,5})");
+    const QRegExp regExp("([0-9]{1,2}[.][0-9]{0,5})|([1][.][0]{0,5})");
     textBox->setValidator(new QRegExpValidator(regExp, timePerStepLayout->widget()));
     timePerStepLayout->addWidget(textBox);
 

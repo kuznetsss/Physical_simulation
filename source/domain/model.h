@@ -34,6 +34,7 @@ public:
 
     void startStopSimulation();
 
+    float deltaT() const;
     void setDeltaT(float deltaT);
 
     std::size_t ballsNumber() const;

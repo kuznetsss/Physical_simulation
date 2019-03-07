@@ -14,7 +14,13 @@ struct Ball::Impl
         _position(initPosition),
         _speed(utils::Vector2f()),
         _isFixed(false)
-    {}
+    {
+      if (_position.x() < RADIUS) _position.setX(1.001f * RADIUS);
+      if (_position.x() > FIELD_WIDTH - RADIUS) _position.setX(1.001f * (FIELD_WIDTH - RADIUS));
+
+      if (_position.y() < RADIUS) _position.setY(1.001f * RADIUS);
+      if (_position.y() > FIELD_HEIGHT - RADIUS) _position.setY(1.001f * (FIELD_WIDTH - RADIUS));
+    }
 
     bool checkXCordinateInField(const float x)
     { return x < FIELD_WIDTH - RADIUS && x > RADIUS; }
