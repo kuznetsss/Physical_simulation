@@ -18,9 +18,9 @@ install:
 
 script:
     - mkdir build_tests
-    - tree
+    - tree -L 3
     - cd build_tests
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT=../googletest/install
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT="$PWD/../googletest/install"
     - make -j2 balls_simulator_tests
     - ctest --verbose
     - ctest -V -T Memcheck
