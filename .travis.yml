@@ -2,6 +2,11 @@ dist: xenial
 language: cpp
 compiler: clang
 
+cache:
+    directories:
+     - /home/travis/build/kuznetsss/Balls-simulator/build_tests
+     - /home/travis/build/kuznetsss/Balls-simulator/build
+
 install:
     - sudo apt-get update 
     - sudo apt-get install build-essential software-properties-common -y 
