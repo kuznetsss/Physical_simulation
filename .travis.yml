@@ -4,14 +4,9 @@ compiler:
     - clang
     - gcc
 
-matrix:
-    include:
-        - compiler: clang
-        - compiler: gcc
-
 install:
     - sudo apt-get update 
-    - sudo apt-get install qt5-default gtest
+    - sudo apt-get install qt5-default libgtest-dev
 
 script:
     - mkdir build_tests
