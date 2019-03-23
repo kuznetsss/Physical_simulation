@@ -1,4 +1,6 @@
-# Balls simulator
+# Balls simulator 
+[![Build Status](https://travis-ci.com/kuznetsss/Balls-simulator.svg?branch=master)](https://travis-ci.com/kuznetsss/Balls-simulator)
+
   The program simulate balls behaviour with interaction force between each other: $F(r) = 1/r - 1/r^2$.
   - Balls can walk trough each other.
   - Balls has an elastic reflection from the walls.
