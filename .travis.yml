@@ -25,7 +25,6 @@ install:
     - cd ../..
 
 script:
-    - mkdir build_tests
     - tree -L 3
     - cd build_tests
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT="$PWD/../googletest/install"
@@ -33,7 +32,6 @@ script:
     - ctest --verbose
     - ctest -V -T Memcheck
     - cd ..
-    - mkdir build
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT="$PWD/../googletest/install"
     - make -j2 balls_simulator
