@@ -6,8 +6,10 @@ install:
     - sudo apt-get update 
     - sudo apt-get install qt5-default libgtest-dev valgrind
     - mkdir build_gtest
+    - mkdir gtest
     - cd build_gtest
-    - cmake /usr/src/gtest
+    - cmake /usr/src/gtest -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON \
+      -DCMAKE_INSTALL_PREFIX=../gtest
     - make -j2
     - sudo make install -j2 
 
@@ -15,11 +17,11 @@ install:
 script:
     - mkdir build_tests
     - cd build_tests
-    - ctest --build-and-test .. . --build-generator 'Unix Makefiles'
-    - make -j2
+    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT=../gtest
+    - make -j2 balls_simulator_tests
     - ctest --verbose
     - ctest -V -T Memcheck
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release 
-    - make -j2
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT=../gtest 
+    - make -j2 balls_simulator
