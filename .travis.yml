@@ -5,9 +5,10 @@ compiler: clang
 install:
     - sudo apt-get update 
     - sudo apt-get install qt5-default libgtest-dev valgrind
-    - cd /usr/src/gtest
-    - sudo cmake CMakeLists.txt
-    - sudo make -j2
+    - mkdir build_gtest
+    - cd build_gtest
+    - cmake /usr/src/gtest
+    - make -j2
     - sudo make install -j2 
 
 
