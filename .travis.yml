@@ -1,12 +1,15 @@
 dist: xenial
 language: cpp
-compiler: 
-    - clang
-    - gcc
+compiler: clang
 
 install:
     - sudo apt-get update 
     - sudo apt-get install qt5-default libgtest-dev valgrind
+    - cd /usr/src/gtest
+    - sudo cmake CMakeLists.txt
+    - sudo make -j2
+    - sudo make install -j2 
+
 
 script:
     - mkdir build_tests
