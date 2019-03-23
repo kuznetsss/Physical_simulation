@@ -10,7 +10,7 @@ install:
     - mkdir build
     - mkdir install
     - cd build/
-    - cmake ../googletest -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=../install
+    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=../install
     - make -j2
     - make install
     - cd ../..
