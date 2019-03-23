@@ -1,0 +1,26 @@
+dist: xenial
+language: cpp
+compiler: 
+    - clang
+    - gcc
+
+matrix:
+    include:
+        - compiler: clang
+        - compiler: gcc
+
+install:
+    - sudo apt-get update 
+    - sudo apt-get install qt5-default gtest
+
+script:
+    - mkdir build_tests
+    - cd build_tests
+    - ctest --build-and-test .. . --build-generator 'Unix Makefiles'
+    - make -j2
+    - ctest --verbose
+    - ctest -V -T Memcheck
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=Release 
+    - make -j2
