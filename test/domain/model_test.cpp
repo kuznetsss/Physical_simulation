@@ -47,6 +47,7 @@ TEST_F(Model_Test, AddingRemovingManyBalls) {
   EXPECT_EQ(model.ballsNumber(), BALLS_NUM);
   const auto ids = model.ballIds();
   for (const auto& id : ids) model.removeBallLater(id);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   EXPECT_EQ(model.ballsNumber(), 0);
 }
 
