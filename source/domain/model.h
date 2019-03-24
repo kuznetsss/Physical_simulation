@@ -4,48 +4,49 @@
 #include <vector>
 
 #include "utils/common_utils.h"
-#include "utils/vector2f.h"
 #include "utils/id.h"
+#include "utils/vector2f.h"
 
 namespace utils {
 
 class Vector2f;
 
-} //namespace utils
+}  // namespace utils
 
 namespace domain {
 
-class Model: public utils::NonCopyable
-{
-public:
-    Model();
-    ~Model();
+class Model : public utils::NonCopyable {
+ public:
+  Model();
+  ~Model();
 
-    utils::Id addBall(const utils::Vector2f& position);
-    void removeBall(const utils::Vector2f& position);
-    void removeBall(const utils::Id& ballId);
+  utils::Id addBall(const utils::Vector2f& position);
+  void removeBall(const utils::Vector2f& position);
+  void removeBall(const utils::Id& ballId);
+  void removeBallLater(const utils::Vector2f& position);
+  void removeBallLater(const utils::Id& ballId);
 
-    void moveBall(const utils::Id& ballId, const utils::Vector2f& position);
+  void moveBall(const utils::Id& ballId, const utils::Vector2f& position);
 
-    void setBallFixed(const utils::Id& ballId, bool fixed);
+  void setBallFixed(const utils::Id& ballId, bool fixed);
 
-    utils::Id findBallByPosition(const utils::Vector2f& position) const;
-    std::vector<utils::Vector2f> ballsPositions() const;
+  utils::Id findBallByPosition(const utils::Vector2f& position) const;
+  std::vector<utils::Vector2f> ballsPositions() const;
 
-    void startStopSimulation();
+  void startStopSimulation();
 
-    float deltaT() const;
-    void setDeltaT(float deltaT);
+  float deltaT() const;
+  void setDeltaT(float deltaT);
 
-    std::size_t ballsNumber() const;
-    std::vector<utils::Id> ballIds() const;
-    utils::Vector2f ballPosition(const utils::Id& ballId) const;
+  std::size_t ballsNumber() const;
+  std::vector<utils::Id> ballIds() const;
+  utils::Vector2f ballPosition(const utils::Id& ballId) const;
 
-private:
-    struct Impl;
-    utils::ImplPtr<Impl> _d;
+ private:
+  struct Impl;
+  utils::ImplPtr<Impl> _d;
 };
 
-} // namespace domain
+}  // namespace domain
 
-#endif // DOMAIN_MODEL
+#endif  // DOMAIN_MODEL

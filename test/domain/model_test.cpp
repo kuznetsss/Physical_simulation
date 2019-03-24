@@ -39,6 +39,17 @@ TEST_F(Model_Test, BallOperations) {
   EXPECT_EQ(model.ballsNumber(), 0);
 }
 
+TEST_F(Model_Test, AddingRemovingManyBalls) {
+  clearModel();
+  model.startStopSimulation();
+  constexpr int BALLS_NUM = 1000;
+  for (int i = 0; i < BALLS_NUM; ++i) model.addBall(utils::Vector2f(i, i));
+  EXPECT_EQ(model.ballsNumber(), BALLS_NUM);
+  const auto ids = model.ballIds();
+  for (const auto& id : ids) model.removeBallLater(id);
+  EXPECT_EQ(model.ballsNumber(), 0);
+}
+
 TEST_F(Model_Test, SimulationRunning) {
   const auto initialBallsNumber = model.ballsNumber();
   model.startStopSimulation();

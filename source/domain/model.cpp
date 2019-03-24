@@ -17,7 +17,7 @@ struct Model::Impl {
   void stopSimulation();
 
   std::unordered_map<std::size_t, BallPtr> _idToBallMap;
-  mutable std::mutex _idToBallMapMutex;
+  std::vector<utils::Id> _idBallsToDelete;
   mutable std::mutex _mutex;
   bool _simulationIsActive = false;
   std::unique_ptr<std::thread> _thread;
@@ -29,20 +29,32 @@ Model::Model() : _d(std::make_unique<Impl>()) {}
 Model::~Model() = default;
 
 utils::Id Model::addBall(const utils::Vector2f& position) {
-  std::lock_guard<std::mutex> lock(_d->_idToBallMapMutex);
+  std::lock_guard<std::mutex> lock(_d->_mutex);
   const auto newBall = std::make_shared<Ball>(position);
   _d->_idToBallMap.emplace(newBall->id().toStdSizeT(), newBall);
   return newBall->id();
 }
 
 void Model::removeBall(const utils::Id& ballId) {
-  std::lock_guard<std::mutex> lock(_d->_idToBallMapMutex);
+  if (ballId.isNull()) return;
+  std::lock_guard<std::mutex> lock(_d->_mutex);
   _d->_idToBallMap.erase(_d->_idToBallMap.find(ballId.toStdSizeT()));
 }
 
 void Model::removeBall(const utils::Vector2f& position) {
   const auto ballId = findBallByPosition(position);
-  if (!ballId.isNull()) removeBall(ballId);
+  removeBall(ballId);
+}
+
+void Model::removeBallLater(const utils::Vector2f& position) {
+  const auto ballId = findBallByPosition(position);
+  removeBallLater(ballId);
+}
+
+void Model::removeBallLater(const utils::Id& ballId) {
+  if (ballId.isNull()) return;
+  std::lock_guard<std::mutex> lock(_d->_mutex);
+  _d->_idBallsToDelete.push_back(ballId);
 }
 
 void Model::moveBall(const utils::Id& ballId, const utils::Vector2f& position) {
@@ -128,24 +140,26 @@ Model::Impl::~Impl() {
 }
 
 void Model::Impl::simulate() {
+  auto deleteBalls = [this]() {
+    std::lock_guard<std::mutex> lock(_mutex);
+    for (const auto& ballId : _idBallsToDelete)
+      _idToBallMap.erase(_idToBallMap.find(ballId.toStdSizeT()));
+    _idBallsToDelete.clear();
+  };
   while (_simulationIsActive) {
-    {
-      std::lock_guard<std::mutex> lock_map(_idToBallMapMutex);
-      for (auto& idAndBall : _idToBallMap) {
-        std::lock_guard<std::mutex> lock(_mutex);
-        const auto force =
-            Physics::calculateForceForBall(idAndBall.second, _idToBallMap);
-        idAndBall.second->applyForce(force, Impl::_deltaT);
-      }
+    for (auto& idAndBall : _idToBallMap) {
+      std::lock_guard<std::mutex> lock(_mutex);
+      const auto force =
+          Physics::calculateForceForBall(idAndBall.second, _idToBallMap);
+      idAndBall.second->applyForce(force, Impl::_deltaT);
     }
+    deleteBalls();
 
-    {
-      std::lock_guard<std::mutex> lock_map(_idToBallMapMutex);
-      for (auto& idAndBall : _idToBallMap) {
-        std::lock_guard<std::mutex> lock(_mutex);
-        idAndBall.second->makeStep(Impl::_deltaT);
-      }
+    for (auto& idAndBall : _idToBallMap) {
+      std::lock_guard<std::mutex> lock(_mutex);
+      idAndBall.second->makeStep(Impl::_deltaT);
     }
+    deleteBalls();
   }
 }
 
