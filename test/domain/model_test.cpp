@@ -21,6 +21,7 @@ class Model_Test : public ::testing::Test {
     for (const auto& ballId : model.ballIds()) {
       model.removeBall(ballId);
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 };
 
@@ -28,14 +29,17 @@ TEST_F(Model_Test, BallOperations) {
   clearModel();
   const auto ballPosition = utils::Vector2f(25.f, 35.f);
   model.addBall(ballPosition);
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
   EXPECT_EQ(model.ballsNumber(), 1);
   EXPECT_FALSE(model.findBallByPosition(ballPosition).isNull());
 
   const auto newBallPosition = utils::Vector2f(100.f, 500.f);
   model.moveBall(model.ballIds().at(0), newBallPosition);
   model.removeBall(ballPosition);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   EXPECT_EQ(model.ballsNumber(), 1);
   model.removeBall(newBallPosition);
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   EXPECT_EQ(model.ballsNumber(), 0);
 }
 
@@ -44,6 +48,7 @@ TEST_F(Model_Test, AddingRemovingManyBalls) {
   model.startStopSimulation();
   constexpr int BALLS_NUM = 1000;
   for (int i = 0; i < BALLS_NUM; ++i) model.addBall(utils::Vector2f(i, i));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   EXPECT_EQ(model.ballsNumber(), BALLS_NUM);
   const auto ids = model.ballIds();
   for (const auto& id : ids) model.removeBallLater(id);
@@ -56,6 +61,7 @@ TEST_F(Model_Test, SimulationRunning) {
   model.startStopSimulation();
 
   EXPECT_NO_THROW(model.addBall(utils::Vector2f()));
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   EXPECT_EQ(model.ballsNumber(), initialBallsNumber + 1);
 
   EXPECT_NO_THROW(model.removeBall(utils::Vector2f()));
@@ -85,7 +91,7 @@ TEST_F(Model_Test, BallsMoving) {
   }
 
   model.addBall(utils::Vector2f(101.f, 101.f));
-  sleep(1);
+  std::this_thread::sleep_for(std::chrono::seconds(1));
 
   for (std::size_t i = 0; i < ballIds.size(); i++) {
     EXPECT_VECTORS_NE(model.ballPosition(ballIds[i]), ballsPositions[i]);

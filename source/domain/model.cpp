@@ -15,9 +15,12 @@ struct Model::Impl {
 
   void simulate();
   void stopSimulation();
+  void createBalls();
+  void deleteBalls();
 
   std::unordered_map<std::size_t, BallPtr> _idToBallMap;
   std::vector<utils::Id> _idBallsToDelete;
+  std::vector<BallPtr> _ballsToCreate;
   mutable std::mutex _mutex;
   bool _simulationIsActive = false;
   std::unique_ptr<std::thread> _thread;
@@ -28,33 +31,39 @@ Model::Model() : _d(std::make_unique<Impl>()) {}
 
 Model::~Model() = default;
 
-utils::Id Model::addBall(const utils::Vector2f& position) {
-  std::lock_guard<std::mutex> lock(_d->_mutex);
-  const auto newBall = std::make_shared<Ball>(position);
-  _d->_idToBallMap.emplace(newBall->id().toStdSizeT(), newBall);
-  return newBall->id();
+utils::Id Model::addBall(const utils::Vector2f &position) {
+  utils::Id id(utils::Id::NULLID);
+  {
+    std::lock_guard<std::mutex> lock(_d->_mutex);
+    _d->_ballsToCreate.emplace_back(std::make_shared<Ball>(position));
+    id = _d->_ballsToCreate.back()->id();
+  }
+  if (!_d->_simulationIsActive) _d->createBalls();
+  return id;
 }
 
-void Model::removeBall(const utils::Id& ballId) {
-  if (ballId.isNull()) return;
-  std::lock_guard<std::mutex> lock(_d->_mutex);
-  _d->_idToBallMap.erase(_d->_idToBallMap.find(ballId.toStdSizeT()));
+void Model::removeBall(const utils::Id &ballId) {
+  if (ballId.isNull())
+    return;
+  removeBallLater(ballId);
 }
 
-void Model::removeBall(const utils::Vector2f& position) {
-  const auto ballId = findBallByPosition(position);
-  removeBall(ballId);
+void Model::removeBall(const utils::Vector2f &position) {
+  removeBallLater(position);
 }
 
-void Model::removeBallLater(const utils::Vector2f& position) {
+void Model::removeBallLater(const utils::Vector2f &position) {
   const auto ballId = findBallByPosition(position);
   removeBallLater(ballId);
 }
 
-void Model::removeBallLater(const utils::Id& ballId) {
+void Model::removeBallLater(const utils::Id &ballId) {
   if (ballId.isNull()) return;
-  std::lock_guard<std::mutex> lock(_d->_mutex);
-  _d->_idBallsToDelete.push_back(ballId);
+  {
+    std::lock_guard<std::mutex> lock(_d->_mutex);
+    _d->_idBallsToDelete.push_back(ballId);
+  }
+  if (!_d->_simulationIsActive) _d->deleteBalls();
 }
 
 void Model::moveBall(const utils::Id& ballId, const utils::Vector2f& position) {
@@ -140,12 +149,6 @@ Model::Impl::~Impl() {
 }
 
 void Model::Impl::simulate() {
-  auto deleteBalls = [this]() {
-    std::lock_guard<std::mutex> lock(_mutex);
-    for (const auto& ballId : _idBallsToDelete)
-      _idToBallMap.erase(_idToBallMap.find(ballId.toStdSizeT()));
-    _idBallsToDelete.clear();
-  };
   while (_simulationIsActive) {
     for (auto& idAndBall : _idToBallMap) {
       std::lock_guard<std::mutex> lock(_mutex);
@@ -154,12 +157,15 @@ void Model::Impl::simulate() {
       idAndBall.second->applyForce(force, Impl::_deltaT);
     }
     deleteBalls();
+    createBalls();
 
     for (auto& idAndBall : _idToBallMap) {
       std::lock_guard<std::mutex> lock(_mutex);
       idAndBall.second->makeStep(Impl::_deltaT);
     }
+    // Duplicated to speed up reaction on user action
     deleteBalls();
+    createBalls();
   }
 }
 
@@ -170,4 +176,22 @@ void Model::Impl::stopSimulation() {
   _thread->join();
 }
 
-}  // namespace domain
+void Model::Impl::createBalls() {
+  std::lock_guard<std::mutex> lock(_mutex);
+  for (auto& ball : _ballsToCreate) {
+    auto id = ball->id().toStdSizeT();
+    auto pair = std::make_pair(id, std::move(ball));
+    _idToBallMap.emplace(std::move(pair));
+  }
+  _ballsToCreate.clear();
+}
+
+void Model::Impl::deleteBalls() {
+  std::lock_guard<std::mutex> lock(_mutex);
+  for (const auto& ballId : _idBallsToDelete) {
+    _idToBallMap.erase(_idToBallMap.find(ballId.toStdSizeT()));
+  }
+  _idBallsToDelete.clear();
+}
+
+} // namespace domain
