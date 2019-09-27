@@ -7,3 +7,5 @@
   - Balls can be created, moved or deleted.
   - Simulation and UI are running in separate threads.
   - GTest is required for tests.
+
+![](demo.gif)

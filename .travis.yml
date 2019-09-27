@@ -30,7 +30,6 @@ script:
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT="$PWD/../googletest/install"
     - make -j2 balls_simulator_tests
     - ctest --verbose
-    - ctest -V -T Memcheck
     - cd ..
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT="$PWD/../googletest/install"
