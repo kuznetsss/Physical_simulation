@@ -1,5 +1,5 @@
 # Physical simulation
-[![Build Status](https://travis-ci.com/kuznetsss/Physical_simulation.svg?branch=master)](https://travis-ci.com/kuznetsss/Balls-simulator)
+[![Build Status](https://travis-ci.com/kuznetsss/Physical_simulation.svg?branch=master)](https://travis-ci.com/kuznetsss/Physical_simulation)
 
   The program simulate balls behaviour with the interaction force
   between each other: `F(r) = 1/r - 1/r^2`.
