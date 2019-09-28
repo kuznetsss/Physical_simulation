@@ -6,8 +6,8 @@ compiler:
 
 cache:
     directories:
-     - /home/travis/build/kuznetsss/Physical-simulation/build_tests
-     - /home/travis/build/kuznetsss/Physical-simulation/build
+     - /home/travis/build/kuznetsss/Physical_simulation/build_tests
+     - /home/travis/build/kuznetsss/Physical_simulation/build
 
 install:
     - sudo apt-get update 
