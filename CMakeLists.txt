@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(Balls_simulator)
+project(Physical_simulation)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -11,7 +11,7 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Widgets)
 
-set(EXECUTABLE balls_simulator)
+set(EXECUTABLE physical_simulation)
 add_executable(${EXECUTABLE} ${SOURCES} ${HEADERS})
 target_link_libraries(${EXECUTABLE} Qt5::Widgets pthread)
 target_include_directories(${EXECUTABLE} PRIVATE ${PROJECT_SOURCE_DIR}/source)

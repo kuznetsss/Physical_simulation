@@ -1,11 +1,13 @@
 dist: xenial
 language: cpp
-compiler: clang
+compiler:
+    - clang
+    - gcc
 
 cache:
     directories:
-     - /home/travis/build/kuznetsss/Balls-simulator/build_tests
-     - /home/travis/build/kuznetsss/Balls-simulator/build
+     - /home/travis/build/kuznetsss/Physical-simulator/build_tests
+     - /home/travis/build/kuznetsss/Physical-simulator/build
 
 install:
     - sudo apt-get update 
@@ -25,12 +27,11 @@ install:
     - cd ../..
 
 script:
-    - tree -L 3
     - cd build_tests
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT="$PWD/../googletest/install"
-    - make -j2 balls_simulator_tests
+    - make -j2 physical_simulator_tests
     - ctest --verbose
     - cd ..
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT="$PWD/../googletest/install"
-    - make -j2 balls_simulator
+    - make -j2 physical_simulator

@@ -24,7 +24,7 @@ MainWindow::MainWindow(presenter::IPresenter* iPresenter):
     mainLayout->addWidget(renderArea);
     setLayout(mainLayout);
     setFixedSize(sizeHint());
-    setWindowTitle(QString("Balls simulator"));
+    setWindowTitle(QString("Physical simulation"));
 }
 
 QLayout* MainWindow::initHorizontalLayout(QWidget* parent)
