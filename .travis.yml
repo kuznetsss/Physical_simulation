@@ -3,21 +3,24 @@ language: cpp
 compiler:
     - clang
     - gcc
-      env:
-        - CXX=g++-8
-        - CC=gcc-8
 
 cache:
     directories:
      - /home/travis/build/kuznetsss/Physical_simulation/build_tests
      - /home/travis/build/kuznetsss/Physical_simulation/build
 
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - clang-8
+            - cmake
+            - gcc-9
+            - g++-9
+            - qt5-default
+
 install:
-    - sudo apt-get update 
-    - sudo apt-get install build-essential software-properties-common -y 
-    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y 
-    - sudo apt-get update 
-    - sudo apt-get install qt5-default valgrind tree gcc-8 g++-8
 # Clone and compile google test
     - git clone --branch='release-1.8.1'  https://github.com/google/googletest
     - cd googletest
@@ -28,6 +31,7 @@ install:
     - make -j2
     - make install
     - cd ../..
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-9" CC="gcc-9"; fi
 
 script:
     - cd build_tests
