@@ -1,44 +1,46 @@
 dist: xenial
 language: cpp
 compiler:
-    - clang
-    - gcc
+  - clang
+  - gcc
 
 cache:
-    directories:
-     - /home/travis/build/kuznetsss/Physical_simulation/build_tests
-     - /home/travis/build/kuznetsss/Physical_simulation/build
+  directories:
+    - /home/travis/build/kuznetsss/Physical_simulation/build_tests
+    - /home/travis/build/kuznetsss/Physical_simulation/build
 
 addons:
-    apt:
-        sources:
-            - ubuntu-toolchain-r-test
-        packages:
-            - clang-8
-            - cmake
-            - gcc-9
-            - g++-9
-            - qt5-default
+  apt:
+    sources:
+      - llvm-toolchain-xenial-8
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-8
+      - cmake
+      - gcc-9
+      - g++-9
+      - qt5-default
 
 install:
-# Clone and compile google test
-    - git clone --branch='release-1.8.1'  https://github.com/google/googletest
-    - cd googletest
-    - mkdir build
-    - mkdir install
-    - cd build/
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=../install
-    - make -j2
-    - make install
-    - cd ../..
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-9" CC="gcc-9"; fi
+  # Clone and compile google test
+  - git clone --branch='release-1.8.1'  https://github.com/google/googletest
+  - cd googletest
+  - mkdir build
+  - mkdir install
+  - cd build/
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=../install
+  - make -j2
+  - make install
+  - cd ../..
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-9" CC="gcc-9"; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-8" CC="clang-8"; fi;
 
 script:
-    - cd build_tests
-    - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT="$PWD/../googletest/install"
-    - make -j2 physical_simulation_tests
-    - ctest --verbose
-    - cd ..
-    - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT="$PWD/../googletest/install"
-    - make -j2 physical_simulation
+  - cd build_tests
+  - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT="$PWD/../googletest/install"
+  - make -j2 physical_simulation_tests
+  - ctest --verbose
+  - cd ..
+  - cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT="$PWD/../googletest/install"
+  - make -j2 physical_simulation
