@@ -6,8 +6,8 @@ compiler:
 
 cache:
     directories:
-     - /home/travis/build/kuznetsss/Physical-simulator/build_tests
-     - /home/travis/build/kuznetsss/Physical-simulator/build
+     - /home/travis/build/kuznetsss/Physical-simulation/build_tests
+     - /home/travis/build/kuznetsss/Physical-simulation/build
 
 install:
     - sudo apt-get update 
@@ -29,9 +29,9 @@ install:
 script:
     - cd build_tests
     - cmake .. -DCMAKE_BUILD_TYPE=Debug -DGTEST_ROOT="$PWD/../googletest/install"
-    - make -j2 physical_simulator_tests
+    - make -j2 physical_simulation_tests
     - ctest --verbose
     - cd ..
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT="$PWD/../googletest/install"
-    - make -j2 physical_simulator
+    - make -j2 physical_simulation
